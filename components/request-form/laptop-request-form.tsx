@@ -1,10 +1,11 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { DatePicker } from '@/components/ui/date-picker';
+import { TermsDialog } from '@/components/ui/terms-dialog';
 import {
   Select,
   SelectContent,
@@ -13,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { useStaffStore } from '@/lib/stores/staff-store';
 
 interface LaptopRequestFormProps {
   onSuccess?: () => void;
@@ -25,6 +27,18 @@ export function LaptopRequestForm({ onSuccess }: LaptopRequestFormProps) {
   const [returnDate, setReturnDate] = useState<Date>();
   const [selectedProgram, setSelectedProgram] = useState<string>('');
   const [selectedApprover, setSelectedApprover] = useState<string>('');
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [selectedDO, setSelectedDO] = useState<string>('');
+
+  const { staff, loading: staffLoading, fetchStaff, getStaffByRole } = useStaffStore();
+
+  // Fetch staff on component mount
+  useEffect(() => {
+    fetchStaff();
+  }, [fetchStaff]);
+
+  // Get Development Officers
+  const developmentOfficers = getStaffByRole('DO');
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -42,15 +56,30 @@ export function LaptopRequestForm({ onSuccess }: LaptopRequestFormProps) {
     }
 
     // Validate select fields
-    if (!selectedProgram || !selectedApprover) {
-      setStatus('❌ Please select both program and approver');
+    if (!selectedProgram || !selectedApprover || !selectedDO) {
+      setStatus('❌ Please select program, development officer, and approver');
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Validate terms acceptance
+    if (!acceptedTerms) {
+      setStatus('❌ Please accept the terms and conditions');
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Get selected DO details
+    const doDetails = staff.find((s) => s.User.Email === selectedDO);
+    if (!doDetails) {
+      setStatus('❌ Development officer not found');
       setIsSubmitting(false);
       return;
     }
 
     const submitData = {
-      developmentOfficerEmail: String(formData.get('developmentOfficerEmail') ?? ''),
-      developmentOfficerName: String(formData.get('developmentOfficerName') ?? ''),
+      developmentOfficerEmail: doDetails.User.Email,
+      developmentOfficerName: doDetails.User.DisplayName,
       clientName: String(formData.get('clientName') ?? ''),
       clientEmail: String(formData.get('clientEmail') ?? ''),
       clientAddress: String(formData.get('clientAddress') ?? ''),
@@ -81,6 +110,8 @@ export function LaptopRequestForm({ onSuccess }: LaptopRequestFormProps) {
         setReturnDate(undefined);
         setSelectedProgram('');
         setSelectedApprover('');
+        setSelectedDO('');
+        setAcceptedTerms(false);
         onSuccess?.();
       } else {
         setStatus(`❌ Error: ${result.error || 'Failed to submit'}`);
@@ -100,32 +131,32 @@ export function LaptopRequestForm({ onSuccess }: LaptopRequestFormProps) {
       <div className="space-y-4">
         <h3 className="text-lg font-semibold">Development Officer Information</h3>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label className="text-muted-foreground" htmlFor="developmentOfficerName">
-              Development Officer Name
-            </Label>
-            <Input
-              id="developmentOfficerName"
-              name="developmentOfficerName"
-              type="text"
-              placeholder="Enter officer name"
-              required
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label className="text-muted-foreground" htmlFor="developmentOfficerEmail">
-              Development Officer Email
-            </Label>
-            <Input
-              id="developmentOfficerEmail"
-              name="developmentOfficerEmail"
-              type="email"
-              placeholder="officer@example.com"
-              required
-            />
-          </div>
+        <div className="space-y-2">
+          <Label className="text-muted-foreground">Development Officer</Label>
+          <Select value={selectedDO} onValueChange={(value) => setSelectedDO(value || '')}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select development officer" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                {staffLoading ? (
+                  <SelectItem value="loading" disabled>
+                    Loading staff...
+                  </SelectItem>
+                ) : developmentOfficers.length === 0 ? (
+                  <SelectItem value="none" disabled>
+                    No development officers found
+                  </SelectItem>
+                ) : (
+                  developmentOfficers.map((officer) => (
+                    <SelectItem key={officer.ID} value={officer.User.Email}>
+                      {officer.User.DisplayName} ({officer.User.Email})
+                    </SelectItem>
+                  ))
+                )}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
@@ -320,6 +351,11 @@ export function LaptopRequestForm({ onSuccess }: LaptopRequestFormProps) {
           placeholder="Enter any additional notes or comments"
           rows={4}
         />
+      </div>
+
+      {/* Terms and Conditions */}
+      <div className="pt-4">
+        <TermsDialog checked={acceptedTerms} onCheckedChange={setAcceptedTerms} />
       </div>
 
       {/* Submit Button */}

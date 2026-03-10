@@ -1,9 +1,18 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { useStaffStore } from '@/lib/stores/staff-store';
 
 interface IssueLaptopFormProps {
   onSuccess?: () => void;
@@ -12,6 +21,19 @@ interface IssueLaptopFormProps {
 export function IssueLaptopForm({ onSuccess }: IssueLaptopFormProps) {
   const [status, setStatus] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedDO, setSelectedDO] = useState<string>('');
+  const [selectedIT, setSelectedIT] = useState<string>('');
+
+  const { staff, loading: staffLoading, fetchStaff, getStaffByRole } = useStaffStore();
+
+  // Fetch staff on component mount
+  useEffect(() => {
+    fetchStaff();
+  }, [fetchStaff]);
+
+  // Get staff by role
+  const developmentOfficers = getStaffByRole('DO');
+  const itStaff = getStaffByRole('IT');
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -21,13 +43,30 @@ export function IssueLaptopForm({ onSuccess }: IssueLaptopFormProps) {
 
     const formData = new FormData(form);
 
+    // Validate staff selections
+    if (!selectedDO || !selectedIT) {
+      setStatus('❌ Please select both development officer and IT assistant');
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Get selected staff details
+    const doDetails = staff.find((s) => s.User.Email === selectedDO);
+    const itDetails = staff.find((s) => s.User.Email === selectedIT);
+
+    if (!doDetails || !itDetails) {
+      setStatus('❌ Staff members not found');
+      setIsSubmitting(false);
+      return;
+    }
+
     const submitData = {
       loanId: String(formData.get('loanId') ?? ''),
       makeAndModelOfDevice: String(formData.get('makeAndModelOfDevice') ?? ''),
       serialNumber: String(formData.get('serialNumber') ?? ''),
       itemsIncluded: String(formData.get('itemsIncluded') ?? ''),
-      nameDOCollectingEquipment: String(formData.get('nameDOCollectingEquipment') ?? ''),
-      nameSecadITAssistant: String(formData.get('nameSecadITAssistant') ?? ''),
+      nameDOCollectingEquipment: doDetails.User.DisplayName,
+      nameSecadITAssistant: itDetails.User.DisplayName,
     };
 
     try {
@@ -42,6 +81,8 @@ export function IssueLaptopForm({ onSuccess }: IssueLaptopFormProps) {
       if (result.ok) {
         setStatus('✅ Form submitted successfully!');
         form.reset();
+        setSelectedDO('');
+        setSelectedIT('');
         onSuccess?.();
       } else {
         setStatus(`❌ Error: ${result.error || 'Failed to submit'}`);
@@ -109,25 +150,59 @@ export function IssueLaptopForm({ onSuccess }: IssueLaptopFormProps) {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="nameDOCollectingEquipment">Name (DO Collecting Equipment)</Label>
-            <Input
-              id="nameDOCollectingEquipment"
-              name="nameDOCollectingEquipment"
-              type="text"
-              placeholder="Enter DO name"
-              required
-            />
+            <Label>Development Officer (Collecting Equipment)</Label>
+            <Select value={selectedDO} onValueChange={(value) => setSelectedDO(value || '')}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select development officer" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {staffLoading ? (
+                    <SelectItem value="loading" disabled>
+                      Loading staff...
+                    </SelectItem>
+                  ) : developmentOfficers.length === 0 ? (
+                    <SelectItem value="none" disabled>
+                      No development officers found
+                    </SelectItem>
+                  ) : (
+                    developmentOfficers.map((officer) => (
+                      <SelectItem key={officer.ID} value={officer.User.Email}>
+                        {officer.User.DisplayName}
+                      </SelectItem>
+                    ))
+                  )}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="nameSecadITAssistant">Name (SECAD IT Assistant)</Label>
-            <Input
-              id="nameSecadITAssistant"
-              name="nameSecadITAssistant"
-              type="text"
-              placeholder="Enter IT assistant name"
-              required
-            />
+            <Label>SECAD IT Assistant</Label>
+            <Select value={selectedIT} onValueChange={(value) => setSelectedIT(value || '')}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select IT assistant" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {staffLoading ? (
+                    <SelectItem value="loading" disabled>
+                      Loading staff...
+                    </SelectItem>
+                  ) : itStaff.length === 0 ? (
+                    <SelectItem value="none" disabled>
+                      No IT staff found
+                    </SelectItem>
+                  ) : (
+                    itStaff.map((staff) => (
+                      <SelectItem key={staff.ID} value={staff.User.Email}>
+                        {staff.User.DisplayName}
+                      </SelectItem>
+                    ))
+                  )}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
         </div>
       </div>

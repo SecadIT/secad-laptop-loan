@@ -6,7 +6,6 @@ import { IssueLaptopForm } from '@/components/issue-form/issue-laptop-form';
 export default function IssueLaptopPage() {
   return (
     <>
-      <Navigation />
       <main className="min-h-screen p-4 sm:p-6 md:p-10 ">
         <div className="max-w-4xl mx-auto">
           <Card>

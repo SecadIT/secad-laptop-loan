@@ -12,6 +12,7 @@ const navItems = [
   { name: 'Request Laptop Loan', href: '/request-laptop-loan' },
   { name: 'Issue Laptop', href: '/issue-laptop' },
   { name: 'Request Signature', href: '/request-signature' },
+  { name: 'Loan List', href: '/loan-list' },
 ];
 
 export function Navigation() {
@@ -26,15 +27,15 @@ export function Navigation() {
           <div className="font-semibold">Branding</div>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex gap-6">
+          <div className="hidden md:flex gap-6 border rounded-t-md">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'relative text-sm font-medium transition-all duration-200 px-3 py-2 rounded-t',
+                  'relative text-sm font-medium transition-all duration-200 px-3 py-2 ',
                   pathname === item.href
-                    ? 'text-foreground bg-accent'
+                    ? 'text-foreground '
                     : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
                 )}
               >

@@ -1,8 +1,8 @@
-"use client";
-import { useRef, useEffect, forwardRef, useImperativeHandle } from "react";
-import { useTheme } from "next-themes";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
+'use client';
+import { useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
+import { useTheme } from 'next-themes';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 
 interface SignatureCanvasProps {
   value?: string;
@@ -19,20 +19,17 @@ export interface SignatureCanvasRef {
   toDataURL: () => string;
 }
 
-export const SignatureCanvas = forwardRef<
-  SignatureCanvasRef,
-  SignatureCanvasProps
->(
+export const SignatureCanvas = forwardRef<SignatureCanvasRef, SignatureCanvasProps>(
   (
     {
       value,
       onChange,
-      label = "Draw Your Signature",
+      label = 'Draw Your Signature',
       showClearButton = true,
       height = 200,
-      className = "",
+      className = '',
     },
-    ref,
+    ref
   ) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const isDrawingRef = useRef(false);
@@ -40,7 +37,7 @@ export const SignatureCanvas = forwardRef<
 
     // Get stroke color based on theme
     const getStrokeColor = () => {
-      return resolvedTheme === "dark" ? "#fff" : "#000";
+      return resolvedTheme === 'dark' ? '#fff' : '#000';
     };
 
     // Expose methods via ref
@@ -49,14 +46,14 @@ export const SignatureCanvas = forwardRef<
       isEmpty: () => {
         const canvas = canvasRef.current;
         if (!canvas) return true;
-        const ctx = canvas.getContext("2d");
+        const ctx = canvas.getContext('2d');
         if (!ctx) return true;
         const pixelData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         return !pixelData.data.some((channel) => channel !== 0);
       },
       toDataURL: () => {
         const canvas = canvasRef.current;
-        return canvas ? canvas.toDataURL() : "";
+        return canvas ? canvas.toDataURL() : '';
       },
     }));
 
@@ -65,7 +62,7 @@ export const SignatureCanvas = forwardRef<
       const canvas = canvasRef.current;
       if (!canvas) return;
 
-      const ctx = canvas.getContext("2d");
+      const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
       // Set canvas size to match display size only on first render
@@ -78,8 +75,8 @@ export const SignatureCanvas = forwardRef<
       // Set drawing style with current theme color
       ctx.strokeStyle = getStrokeColor();
       ctx.lineWidth = 2;
-      ctx.lineCap = "round";
-      ctx.lineJoin = "round";
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
 
       // Handle resize
       const handleResize = () => {
@@ -90,12 +87,12 @@ export const SignatureCanvas = forwardRef<
         ctx.putImageData(imageData, 0, 0);
         ctx.strokeStyle = getStrokeColor();
         ctx.lineWidth = 2;
-        ctx.lineCap = "round";
-        ctx.lineJoin = "round";
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
       };
 
-      window.addEventListener("resize", handleResize);
-      return () => window.removeEventListener("resize", handleResize);
+      window.addEventListener('resize', handleResize);
+      return () => window.removeEventListener('resize', handleResize);
     }, []);
 
     // Handle theme changes - invert existing signature colors
@@ -103,7 +100,7 @@ export const SignatureCanvas = forwardRef<
       const canvas = canvasRef.current;
       if (!canvas || !resolvedTheme) return;
 
-      const ctx = canvas.getContext("2d");
+      const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
       // Get current canvas data
@@ -127,15 +124,13 @@ export const SignatureCanvas = forwardRef<
       // Update stroke style for future drawing
       ctx.strokeStyle = getStrokeColor();
       ctx.lineWidth = 2;
-      ctx.lineCap = "round";
-      ctx.lineJoin = "round";
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
     }, [resolvedTheme]);
 
     // Drawing functions
     const getCoordinates = (
-      e:
-        | React.MouseEvent<HTMLCanvasElement>
-        | React.TouchEvent<HTMLCanvasElement>,
+      e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
     ) => {
       const canvas = canvasRef.current;
       if (!canvas) return { x: 0, y: 0 };
@@ -144,8 +139,8 @@ export const SignatureCanvas = forwardRef<
       const scaleX = canvas.width / rect.width;
       const scaleY = canvas.height / rect.height;
 
-      const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
-      const clientY = "touches" in e ? e.touches[0].clientY : e.clientY;
+      const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+      const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
 
       return {
         x: (clientX - rect.left) * scaleX,
@@ -154,14 +149,12 @@ export const SignatureCanvas = forwardRef<
     };
 
     const startDrawing = (
-      e:
-        | React.MouseEvent<HTMLCanvasElement>
-        | React.TouchEvent<HTMLCanvasElement>,
+      e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
     ) => {
       const canvas = canvasRef.current;
       if (!canvas) return;
 
-      const ctx = canvas.getContext("2d");
+      const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
       isDrawingRef.current = true;
@@ -169,8 +162,8 @@ export const SignatureCanvas = forwardRef<
       // Set stroke style based on current theme
       ctx.strokeStyle = getStrokeColor();
       ctx.lineWidth = 2;
-      ctx.lineCap = "round";
-      ctx.lineJoin = "round";
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
 
       const { x, y } = getCoordinates(e);
 
@@ -178,11 +171,7 @@ export const SignatureCanvas = forwardRef<
       ctx.moveTo(x, y);
     };
 
-    const draw = (
-      e:
-        | React.MouseEvent<HTMLCanvasElement>
-        | React.TouchEvent<HTMLCanvasElement>,
-    ) => {
+    const draw = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
       if (!isDrawingRef.current) return;
 
       e.preventDefault(); // Prevent scrolling on touch devices
@@ -190,7 +179,7 @@ export const SignatureCanvas = forwardRef<
       const canvas = canvasRef.current;
       if (!canvas) return;
 
-      const ctx = canvas.getContext("2d");
+      const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
       const { x, y } = getCoordinates(e);
@@ -214,12 +203,12 @@ export const SignatureCanvas = forwardRef<
       const canvas = canvasRef.current;
       if (!canvas) return;
 
-      const ctx = canvas.getContext("2d");
+      const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       if (onChange) {
-        onChange("");
+        onChange('');
       }
     };
 
@@ -230,7 +219,7 @@ export const SignatureCanvas = forwardRef<
           <canvas
             ref={canvasRef}
             className="w-full cursor-crosshair touch-none block"
-            style={{ height: `${height}px`, display: "block" }}
+            style={{ height: `${height}px`, display: 'block' }}
             onMouseDown={startDrawing}
             onMouseMove={draw}
             onMouseUp={stopDrawing}
@@ -241,18 +230,13 @@ export const SignatureCanvas = forwardRef<
           />
         </div>
         {showClearButton && (
-          <Button
-            type="button"
-            variant="outline"
-            onClick={clearSignature}
-            className="w-full"
-          >
+          <Button type="button" variant="outline" onClick={clearSignature} className="w-full">
             Clear Signature
           </Button>
         )}
       </div>
     );
-  },
+  }
 );
 
-SignatureCanvas.displayName = "SignatureCanvas";
+SignatureCanvas.displayName = 'SignatureCanvas';
