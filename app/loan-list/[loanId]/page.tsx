@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useLoanStore, type LoanRecord } from '@/lib/stores/loan-store';
+import { DownloadLoanPdf } from '@/components/loan-list/download-loan-pdf';
 import { ChevronLeft } from 'lucide-react';
 
 interface LoanDetailPageProps {
@@ -184,6 +185,7 @@ export default function LoanDetailPage({ params }: LoanDetailPageProps) {
           <div className="flex gap-4 pt-4 border-t">
             <Button variant="outline">Edit Loan</Button>
             <Button variant="destructive">Delete Loan</Button>
+            <DownloadLoanPdf loan={loan} variant="default" />
           </div>
         </CardContent>
       </Card>

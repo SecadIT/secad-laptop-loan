@@ -62,7 +62,7 @@ export function AssetFilter({
           value = asset.Color?.Value;
           break;
         case 'condition':
-          value = asset.ConditionNotes;
+          value = asset.Condition?.Value;
           break;
       }
 

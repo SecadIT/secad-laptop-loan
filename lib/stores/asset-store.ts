@@ -20,7 +20,12 @@ export interface AssetRecord {
     Value: string;
   };
   SerialNumber: string;
+  Condition?: {
+    Id: number;
+    Value: string;
+  };
   ConditionNotes?: string;
+  AssignedLoanId?: string;
   Modified: string;
   Created: string;
   Author: {

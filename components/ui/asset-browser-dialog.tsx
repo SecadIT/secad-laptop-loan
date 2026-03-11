@@ -67,7 +67,7 @@ export function AssetBrowserDialog({
         asset.SerialNumber?.toLowerCase().includes(query) ||
         asset.Manufacturer?.Value?.toLowerCase().includes(query) ||
         asset.Color?.Value?.toLowerCase().includes(query) ||
-        asset.ConditionNotes?.toLowerCase().includes(query)
+        asset.Condition?.Value?.toLowerCase().includes(query)
       );
     }
 
@@ -132,7 +132,7 @@ export function AssetBrowserDialog({
                     </TableCell>
                     <TableCell>{asset.Manufacturer?.Value || 'N/A'}</TableCell>
                     <TableCell>{asset.Color?.Value || 'N/A'}</TableCell>
-                    <TableCell className="text-sm">{asset.ConditionNotes || 'N/A'}</TableCell>
+                    <TableCell className="text-sm">{asset.Condition?.Value || 'N/A'}</TableCell>
                     <TableCell className="text-right">
                       <Button type="button" size="sm" onClick={() => handleSelectAsset(asset)}>
                         Select

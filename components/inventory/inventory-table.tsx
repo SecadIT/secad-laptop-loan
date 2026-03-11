@@ -52,7 +52,7 @@ export function InventoryTable() {
           case 'color':
             return asset.Color?.Value === filterValue;
           case 'condition':
-            return asset.ConditionNotes === filterValue;
+            return asset.Condition?.Value === filterValue;
           default:
             return true;
         }
@@ -69,7 +69,7 @@ export function InventoryTable() {
           asset.Manufacturer?.Value?.toLowerCase().includes(query) ||
           asset.Status?.Value?.toLowerCase().includes(query) ||
           asset.Color?.Value?.toLowerCase().includes(query) ||
-          asset.ConditionNotes?.toLowerCase().includes(query)
+          asset.Condition?.Value?.toLowerCase().includes(query)
       );
     }
 
@@ -229,7 +229,7 @@ export function InventoryTable() {
                         {asset.Status?.Value || 'N/A'}
                       </span>
                     </TableCell>
-                    <TableCell className="text-sm">{asset.ConditionNotes || 'N/A'}</TableCell>
+                    <TableCell className="text-sm">{asset.Condition?.Value || 'N/A'}</TableCell>
                     <TableCell className="text-sm">{formatDate(asset.Created)}</TableCell>
                     <TableCell>
                       <Button size="sm" variant="outline" onClick={() => handleRowClick(asset)}>

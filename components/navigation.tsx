@@ -34,7 +34,7 @@ export function Navigation() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'relative text-sm font-medium transition-all duration-200 px-3 py-2 ',
+                  'relative text-sm font-medium transition-all duration-200 px-3 py-2 rounded-md',
                   pathname === item.href
                     ? 'text-foreground '
                     : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'

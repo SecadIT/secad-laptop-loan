@@ -105,6 +105,35 @@ export function IssueLaptopForm({ onSuccess }: IssueLaptopFormProps) {
 
       if (result.ok) {
         setStatus('✅ Form submitted successfully!');
+
+        // Step 3: Update inventory status to "loaned"
+        try {
+          setStatus('✅ Form submitted! Updating inventory...');
+          const statusUpdateResponse = await fetch('/api/update-asset-status', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              serialNumber: submitData.serialNumber,
+              status: 'loaned',
+              itOfficerEmail: itDetails.User.Email,
+              loanId: loanId,
+            }),
+          });
+
+          const statusResult = await statusUpdateResponse.json();
+
+          if (statusResult.success) {
+            setStatus('✅ Form submitted and inventory updated successfully!');
+          } else {
+            console.warn('⚠️ Inventory update failed:', statusResult.error);
+            setStatus('✅ Form submitted (inventory update pending - see console)');
+          }
+        } catch (inventoryError) {
+          console.warn('⚠️ Failed to update inventory status:', inventoryError);
+          setStatus('✅ Form submitted (inventory update failed - see console)');
+        }
+
+        // Reset form regardless of inventory update result
         form.reset();
         setSelectedDO('');
         setSelectedIT('');
