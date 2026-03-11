@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useStaffStore } from '@/lib/stores/staff-store';
+import { LoanBrowserDialog } from '@/components/ui/loan-browser-dialog';
 
 interface IssueLaptopFormProps {
   onSuccess?: () => void;
@@ -23,6 +24,7 @@ export function IssueLaptopForm({ onSuccess }: IssueLaptopFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedDO, setSelectedDO] = useState<string>('');
   const [selectedIT, setSelectedIT] = useState<string>('');
+  const [loanId, setLoanId] = useState<string>('');
 
   const { staff, loading: staffLoading, fetchStaff, getStaffByRole } = useStaffStore();
 
@@ -102,6 +104,7 @@ export function IssueLaptopForm({ onSuccess }: IssueLaptopFormProps) {
         form.reset();
         setSelectedDO('');
         setSelectedIT('');
+        setLoanId('');
         onSuccess?.();
       } else {
         setStatus(`❌ Error: ${result.error || 'Failed to submit'}`);
@@ -120,7 +123,16 @@ export function IssueLaptopForm({ onSuccess }: IssueLaptopFormProps) {
       {/* Loan ID Section */}
       <div className="space-y-2">
         <Label htmlFor="loanId">Loan ID</Label>
-        <Input id="loanId" name="loanId" type="text" placeholder="Enter loan ID" required />
+        <Input
+          id="loanId"
+          name="loanId"
+          type="text"
+          placeholder="Enter loan ID"
+          value={loanId}
+          onChange={(e) => setLoanId(e.target.value)}
+          required
+        />
+        <LoanBrowserDialog onSelectLoan={setLoanId} />
       </div>
 
       {/* Device Information Section */}

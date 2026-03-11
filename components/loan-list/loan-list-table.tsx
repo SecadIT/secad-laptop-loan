@@ -45,7 +45,6 @@ export function LoanListTable() {
         loan.ClientName.toLowerCase().includes(query) ||
         loan.Program.toLowerCase().includes(query) ||
         loan.CourseName.toLowerCase().includes(query) ||
-        loan.CourseProvider?.toLowerCase().includes(query) ||
         loan.DevelopmentOfficerName.toLowerCase().includes(query) ||
         loan.SelectedApprover.toLowerCase().includes(query) ||
         loan.IdentityandStatus?.Value.toLowerCase().includes(query)
@@ -165,11 +164,11 @@ export function LoanListTable() {
                 <TableHead>Status</TableHead>
                 <TableHead>Program</TableHead>
                 <TableHead>Course</TableHead>
-                <TableHead>Provider</TableHead>
                 <TableHead>Officer</TableHead>
                 <TableHead>Loan Date</TableHead>
                 <TableHead>Return Date</TableHead>
                 <TableHead>Approver</TableHead>
+                <TableHead>Action</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -181,11 +180,7 @@ export function LoanListTable() {
                 </TableRow>
               ) : (
                 paginatedLoans.map((loan) => (
-                  <TableRow
-                    key={loan.ID}
-                    className="cursor-pointer hover:bg-muted/50 transition-colors"
-                    onClick={() => handleRowClick(loan)}
-                  >
+                  <TableRow key={loan.ID} className="hover:bg-muted/50 transition-colors">
                     <TableCell className="font-medium">{loan.ClientName}</TableCell>
                     <TableCell>
                       <span className="text-xs bg-muted px-2 py-1 rounded">
@@ -194,11 +189,20 @@ export function LoanListTable() {
                     </TableCell>
                     <TableCell>{getProgramLabel(loan.Program)}</TableCell>
                     <TableCell>{loan.CourseName}</TableCell>
-                    <TableCell>{loan.CourseProvider}</TableCell>
                     <TableCell>{loan.DevelopmentOfficerName}</TableCell>
                     <TableCell>{formatDate(loan.Equipmentloandate)}</TableCell>
                     <TableCell>{formatDate(loan.Agreedequipmentreturndate)}</TableCell>
                     <TableCell className="text-sm">{loan.SelectedApprover}</TableCell>
+                    <TableCell>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleRowClick(loan)}
+                        className="cursor-pointer"
+                      >
+                        Show Detail
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 ))
               )}

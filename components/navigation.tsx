@@ -7,12 +7,14 @@ import { cn } from '@/lib/utils';
 import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { BrandingLogo } from './branding/logo';
 
 const navItems = [
   { name: 'Request Laptop Loan', href: '/request-laptop-loan' },
   { name: 'Issue Laptop', href: '/issue-laptop' },
   { name: 'Request Signature', href: '/request-signature' },
   { name: 'Loan List', href: '/loan-list' },
+  { name: 'Inventory', href: '/inventory' },
 ];
 
 export function Navigation() {
@@ -24,8 +26,7 @@ export function Navigation() {
       <div className="px-4 sm:px-10 py-4">
         {/* Desktop Navigation */}
         <div className="flex justify-between items-center">
-          <div className="font-semibold">Branding</div>
-
+          <BrandingLogo />
           {/* Desktop Menu */}
           <div className="hidden md:flex gap-6 ">
             {navItems.map((item) => (

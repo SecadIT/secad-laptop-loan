@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DatePicker } from '@/components/ui/date-picker';
 import { SignatureCanvas } from '@/components/ui/signature-canvas';
+import { LoanBrowserDialog } from '@/components/ui/loan-browser-dialog';
 
 interface SignatureFormProps {
   onSuccess?: () => void;
@@ -19,6 +20,7 @@ export function SignatureForm({ onSuccess }: SignatureFormProps) {
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [agreeSignature, setAgreeSignature] = useState(false);
   const [signatureData, setSignatureData] = useState<string>('');
+  const [loanId, setLoanId] = useState<string>('');
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -88,6 +90,7 @@ export function SignatureForm({ onSuccess }: SignatureFormProps) {
         setAgreeTerms(false);
         setAgreeSignature(false);
         setSignatureData('');
+        setLoanId('');
         onSuccess?.();
       } else {
         setStatus(`❌ Error: ${result.error || 'Failed to submit'}`);
@@ -106,7 +109,16 @@ export function SignatureForm({ onSuccess }: SignatureFormProps) {
       {/* Loan ID Section */}
       <div className="space-y-2">
         <Label htmlFor="loanId">Loan ID</Label>
-        <Input id="loanId" name="loanId" type="text" placeholder="Enter loan ID" required />
+        <Input
+          id="loanId"
+          name="loanId"
+          type="text"
+          placeholder="Enter loan ID"
+          value={loanId}
+          onChange={(e) => setLoanId(e.target.value)}
+          required
+        />
+        <LoanBrowserDialog onSelectLoan={setLoanId} />
       </div>
 
       {/* Confirmation of Receipt Section */}
