@@ -27,7 +27,7 @@ export function Navigation() {
           <div className="font-semibold">Branding</div>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex gap-6 border rounded-t-md">
+          <div className="hidden md:flex gap-6 ">
             {navItems.map((item) => (
               <Link
                 key={item.href}
@@ -41,7 +41,7 @@ export function Navigation() {
               >
                 {item.name}
                 {pathname === item.href && (
-                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary" />
+                  <span className="absolute -bottom-4 left-0 right-0 h-0.5 bg-primary" />
                 )}
               </Link>
             ))}

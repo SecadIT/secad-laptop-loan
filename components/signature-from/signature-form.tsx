@@ -27,6 +27,7 @@ export function SignatureForm({ onSuccess }: SignatureFormProps) {
     setStatus('');
 
     const formData = new FormData(form);
+    const loanId = String(formData.get('loanId') ?? '');
 
     // Validate checkboxes
     if (!confirmReceipt || !agreeTerms || !agreeSignature) {
@@ -42,18 +43,36 @@ export function SignatureForm({ onSuccess }: SignatureFormProps) {
       return;
     }
 
-    const submitData = {
-      loanId: String(formData.get('loanId') ?? ''),
-      confirmReceipt: confirmReceipt,
-      agreeTerms: agreeTerms,
-      printedName: String(formData.get('printedName') ?? ''),
-      agreeSignature: agreeSignature,
-      signatureDate: signatureDate.toISOString(),
-      signatureImage: signatureData, // Canvas signature data
-    };
-
     try {
-      const response = await fetch('/api/submit', {
+      // Step 1: Validate loan ID exists
+      setStatus('🔍 Validating loan ID...');
+      const validationResponse = await fetch('/api/validate-loan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ loanId }),
+      });
+
+      const validationResult = await validationResponse.json();
+
+      if (!validationResult.ok || !validationResult.exists) {
+        setStatus(`❌ Loan ID "${loanId}" not found. Please check and try again.`);
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Step 2: Proceed with signature submission
+      setStatus('📤 Submitting signature...');
+      const submitData = {
+        loanId,
+        confirmReceipt: confirmReceipt,
+        agreeTerms: agreeTerms,
+        printedName: String(formData.get('printedName') ?? ''),
+        agreeSignature: agreeSignature,
+        signatureDate: signatureDate.toISOString(),
+        signatureImage: signatureData, // Canvas signature data
+      };
+
+      const response = await fetch('/api/signature', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(submitData),

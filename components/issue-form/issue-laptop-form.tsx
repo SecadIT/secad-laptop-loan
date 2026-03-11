@@ -42,6 +42,7 @@ export function IssueLaptopForm({ onSuccess }: IssueLaptopFormProps) {
     setStatus('');
 
     const formData = new FormData(form);
+    const loanId = String(formData.get('loanId') ?? '');
 
     // Validate staff selections
     if (!selectedDO || !selectedIT) {
@@ -60,17 +61,35 @@ export function IssueLaptopForm({ onSuccess }: IssueLaptopFormProps) {
       return;
     }
 
-    const submitData = {
-      loanId: String(formData.get('loanId') ?? ''),
-      makeAndModelOfDevice: String(formData.get('makeAndModelOfDevice') ?? ''),
-      serialNumber: String(formData.get('serialNumber') ?? ''),
-      itemsIncluded: String(formData.get('itemsIncluded') ?? ''),
-      nameDOCollectingEquipment: doDetails.User.DisplayName,
-      nameSecadITAssistant: itDetails.User.DisplayName,
-    };
-
     try {
-      const response = await fetch('/api/submit', {
+      // Step 1: Validate loan ID exists
+      setStatus('🔍 Validating loan ID...');
+      const validationResponse = await fetch('/api/validate-loan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ loanId }),
+      });
+
+      const validationResult = await validationResponse.json();
+
+      if (!validationResult.ok || !validationResult.exists) {
+        setStatus(`❌ Loan ID "${loanId}" not found. Please check and try again.`);
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Step 2: Proceed with issue laptop submission
+      setStatus('📤 Submitting issue laptop form...');
+      const submitData = {
+        loanId,
+        makeAndModelOfDevice: String(formData.get('makeAndModelOfDevice') ?? ''),
+        serialNumber: String(formData.get('serialNumber') ?? ''),
+        itemsIncluded: String(formData.get('itemsIncluded') ?? ''),
+        nameDOCollectingEquipment: doDetails.User.DisplayName,
+        nameSecadITAssistant: itDetails.User.DisplayName,
+      };
+
+      const response = await fetch('/api/issue-laptop', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(submitData),
