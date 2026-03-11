@@ -33,7 +33,7 @@ export function DownloadLoanPdf({ loan, variant = 'default', className }: Downlo
   <title>Loan Record - ${loan.ID}</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: Tahoma, Verdana, Arial, sans-serif;
       line-height: 1.6;
       color: #333;
       max-width: 800px;

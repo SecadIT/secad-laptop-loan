@@ -16,11 +16,8 @@ export async function POST(req: NextRequest) {
     const powerAutomateUrl = process.env.PA_UPDATE_ASSET_STATUS_URL;
 
     if (!powerAutomateUrl) {
-      console.error('PA_UPDATE_ASSET_STATUS_URL not configured');
       return NextResponse.json({ error: 'Power Automate URL not configured' }, { status: 500 });
     }
-
-    console.log('Updating asset status:', { serialNumber, status, itOfficerEmail, loanId });
 
     // Prepare data for Power Automate
     const updateData = {
@@ -48,7 +45,6 @@ export async function POST(req: NextRequest) {
     }
 
     const result = await response.json();
-    console.log('Asset status updated successfully:', result);
 
     return NextResponse.json({
       success: true,

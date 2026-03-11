@@ -253,12 +253,9 @@ export default function AssetDetailPage({ params }: AssetDetailPageProps) {
               variant="default"
               onClick={() => {
                 const assignedLoanId = asset.AssignedLoanId;
-                console.log('Assigned loan ID:', assignedLoanId);
                 setDialogOpen(true);
                 if (assignedLoanId) {
                   fetchLoanDetails(assignedLoanId);
-                } else {
-                  console.log('No assigned loan ID found in asset');
                 }
               }}
             >

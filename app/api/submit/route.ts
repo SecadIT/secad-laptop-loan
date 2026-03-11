@@ -2,11 +2,7 @@ export async function POST(request: Request) {
   try {
     const data = await request.json();
 
-    console.log('Submitting to Power Automate:', data);
-    console.log('Flow URL:', process.env.PA_FLOW_URL);
-
     if (!process.env.PA_FLOW_URL) {
-      console.error('PA_FLOW_URL not configured');
       return new Response(JSON.stringify({ ok: false, error: 'Flow URL not configured' }), {
         status: 500,
       });
@@ -21,8 +17,6 @@ export async function POST(request: Request) {
     });
 
     const responseText = await res.text();
-    console.log('Power Automate response status:', res.status);
-    console.log('Power Automate response:', responseText);
 
     if (!res.ok) {
       return new Response(

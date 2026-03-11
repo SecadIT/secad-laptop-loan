@@ -20,40 +20,24 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    console.log('Power Automate Response Status:', response.status);
-
     if (!response.ok) {
       const errorText = await response.text();
       console.error('Power Automate Error Response:', errorText);
       throw new Error(`Power Automate returned status ${response.status}`);
     }
 
-    // Get the raw response text first
-    const rawText = await response.text();
-    console.log('Raw Response Text:', rawText);
-
     // Parse JSON response
+    const rawText = await response.text();
     let data;
     try {
       data = JSON.parse(rawText);
     } catch (parseError) {
       console.error('JSON Parse Error:', parseError);
-      console.error('Raw text that failed to parse:', rawText);
       throw new Error(`Invalid JSON response from Power Automate`);
     }
 
     // Power Automate returns the assets array
     const assets = data.assets || data.value || data;
-
-    // Console log the structure for debugging
-    console.log('===== ASSET MANAGER LIST STRUCTURE =====');
-    console.log('Full response:', JSON.stringify(data, null, 2));
-    console.log('Assets count:', Array.isArray(assets) ? assets.length : 0);
-    if (Array.isArray(assets) && assets.length > 0) {
-      console.log('First asset structure:', JSON.stringify(assets[0], null, 2));
-      console.log('Asset keys:', Object.keys(assets[0]));
-    }
-    console.log('=========================================');
 
     return NextResponse.json({
       ok: true,
