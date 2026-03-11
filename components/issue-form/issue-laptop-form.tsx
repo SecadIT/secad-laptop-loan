@@ -14,6 +14,8 @@ import {
 } from '@/components/ui/select';
 import { useStaffStore } from '@/lib/stores/staff-store';
 import { LoanBrowserDialog } from '@/components/ui/loan-browser-dialog';
+import { AssetBrowserDialog } from '@/components/ui/asset-browser-dialog';
+import type { AssetRecord } from '@/lib/stores/asset-store';
 
 interface IssueLaptopFormProps {
   onSuccess?: () => void;
@@ -25,6 +27,8 @@ export function IssueLaptopForm({ onSuccess }: IssueLaptopFormProps) {
   const [selectedDO, setSelectedDO] = useState<string>('');
   const [selectedIT, setSelectedIT] = useState<string>('');
   const [loanId, setLoanId] = useState<string>('');
+  const [makeAndModel, setMakeAndModel] = useState<string>('');
+  const [serialNumber, setSerialNumber] = useState<string>('');
 
   const { staff, loading: staffLoading, fetchStaff, getStaffByRole } = useStaffStore();
 
@@ -105,6 +109,8 @@ export function IssueLaptopForm({ onSuccess }: IssueLaptopFormProps) {
         setSelectedDO('');
         setSelectedIT('');
         setLoanId('');
+        setMakeAndModel('');
+        setSerialNumber('');
         onSuccess?.();
       } else {
         setStatus(`❌ Error: ${result.error || 'Failed to submit'}`);
@@ -147,6 +153,8 @@ export function IssueLaptopForm({ onSuccess }: IssueLaptopFormProps) {
               name="makeAndModelOfDevice"
               type="text"
               placeholder="e.g., Dell Latitude 5420"
+              value={makeAndModel}
+              onChange={(e) => setMakeAndModel(e.target.value)}
               required
             />
           </div>
@@ -158,7 +166,19 @@ export function IssueLaptopForm({ onSuccess }: IssueLaptopFormProps) {
               name="serialNumber"
               type="text"
               placeholder="Enter serial number"
+              value={serialNumber}
+              onChange={(e) => setSerialNumber(e.target.value)}
               required
+            />
+            <AssetBrowserDialog
+              onSelectAsset={(asset: AssetRecord) => {
+                setSerialNumber(asset.SerialNumber || '');
+                setMakeAndModel(
+                  `${asset.Manufacturer?.Value || ''} ${asset.AssetType?.Value || ''}`.trim()
+                );
+              }}
+              assetType="Laptop"
+              statusFilter="Available"
             />
           </div>
         </div>
