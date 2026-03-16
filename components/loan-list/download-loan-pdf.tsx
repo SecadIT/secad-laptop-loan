@@ -252,6 +252,21 @@ export function DownloadLoanPdf({ loan, variant = 'default', className }: Downlo
       : ''
   }
 
+  ${
+    loan.SignatureImage
+      ? `
+  <div class="section">
+    <div class="section-title">Client Signature</div>
+    <div class="field">
+      <div style="background-color: #f8fafc; padding: 20px; border: 2px solid #e2e8f0; border-radius: 8px; display: inline-block;">
+        <img src="${loan.SignatureImage}" alt="Client Signature" style="max-width: 400px; height: auto; display: block;" />
+      </div>
+    </div>
+  </div>
+  `
+      : ''
+  }
+
   <div class="footer">
     <p>This is an official record from SECAD Laptop Loan System</p>
     <p>Document generated automatically - no signature required</p>

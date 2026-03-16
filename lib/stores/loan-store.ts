@@ -25,6 +25,8 @@ export interface LoanRecord {
   ItemsIncluded?: string;
   NameDOCollectingEquipment?: string;
   NameSecadITAssistant?: string;
+  // Signature data
+  SignatureImage?: string;
 }
 
 interface LoanStore {

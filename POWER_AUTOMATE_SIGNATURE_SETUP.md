@@ -56,7 +56,9 @@ Example SharePoint columns to create:
 - **PrintedName** (Single line of text)
 - **AgreeSignature** (Yes/No)
 - **SignatureDate** (Date and Time)
-- **SignatureImage** (Multiple lines of text)
+- **SignatureImage** (Multiple lines of text, Plain text) - Stores the base64 signature image
+
+**Note:** The SignatureImage field stores the complete base64-encoded PNG image (e.g., `data:image/png;base64,iVBORw0KGgo...`). This allows the signature to be displayed in the Next.js app and PDF exports exactly as the client drew it.
 
 ### 3. Response Action
 

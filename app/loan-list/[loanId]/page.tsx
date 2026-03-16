@@ -173,6 +173,21 @@ export default function LoanDetailPage({ params }: LoanDetailPageProps) {
             </div>
           </div>
 
+          {/* Client Signature */}
+          {loan.SignatureImage && (
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold border-b pb-2">Client Signature</h3>
+              <div className="bg-muted/30 p-4 rounded-lg border-2 border-border inline-block">
+                <img
+                  src={loan.SignatureImage}
+                  alt="Client Signature"
+                  className="max-w-md w-full h-auto"
+                  style={{ imageRendering: 'crisp-edges' }}
+                />
+              </div>
+            </div>
+          )}
+
           {/* Additional Notes */}
           {loan.AdditionalNotes && (
             <div className="space-y-4">

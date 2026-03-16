@@ -1,6 +1,5 @@
 'use client';
 import { useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
-import { useTheme } from 'next-themes';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 
@@ -33,12 +32,6 @@ export const SignatureCanvas = forwardRef<SignatureCanvasRef, SignatureCanvasPro
   ) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const isDrawingRef = useRef(false);
-    const { resolvedTheme } = useTheme();
-
-    // Get stroke color based on theme
-    const getStrokeColor = () => {
-      return resolvedTheme === 'dark' ? '#fff' : '#000';
-    };
 
     // Expose methods via ref
     useImperativeHandle(ref, () => ({
@@ -70,10 +63,14 @@ export const SignatureCanvas = forwardRef<SignatureCanvasRef, SignatureCanvasPro
         const rect = canvas.getBoundingClientRect();
         canvas.width = rect.width;
         canvas.height = rect.height;
+
+        // Fill with white background
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
       }
 
-      // Set drawing style with current theme color
-      ctx.strokeStyle = getStrokeColor();
+      // Set drawing style - always black ink on white background
+      ctx.strokeStyle = '#000000';
       ctx.lineWidth = 2;
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
@@ -84,8 +81,13 @@ export const SignatureCanvas = forwardRef<SignatureCanvasRef, SignatureCanvasPro
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         canvas.width = rect.width;
         canvas.height = rect.height;
+
+        // Fill with white background
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
         ctx.putImageData(imageData, 0, 0);
-        ctx.strokeStyle = getStrokeColor();
+        ctx.strokeStyle = '#000000';
         ctx.lineWidth = 2;
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
@@ -94,39 +96,6 @@ export const SignatureCanvas = forwardRef<SignatureCanvasRef, SignatureCanvasPro
       window.addEventListener('resize', handleResize);
       return () => window.removeEventListener('resize', handleResize);
     }, []);
-
-    // Handle theme changes - invert existing signature colors
-    useEffect(() => {
-      const canvas = canvasRef.current;
-      if (!canvas || !resolvedTheme) return;
-
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return;
-
-      // Get current canvas data
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      const data = imageData.data;
-
-      // Invert colors of existing signature
-      for (let i = 0; i < data.length; i += 4) {
-        // Only invert if pixel is not transparent
-        if (data[i + 3] > 0) {
-          data[i] = 255 - data[i]; // Red
-          data[i + 1] = 255 - data[i + 1]; // Green
-          data[i + 2] = 255 - data[i + 2]; // Blue
-          // Alpha stays the same
-        }
-      }
-
-      // Put the inverted image back
-      ctx.putImageData(imageData, 0, 0);
-
-      // Update stroke style for future drawing
-      ctx.strokeStyle = getStrokeColor();
-      ctx.lineWidth = 2;
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
-    }, [resolvedTheme]);
 
     // Drawing functions
     const getCoordinates = (
@@ -159,8 +128,8 @@ export const SignatureCanvas = forwardRef<SignatureCanvasRef, SignatureCanvasPro
 
       isDrawingRef.current = true;
 
-      // Set stroke style based on current theme
-      ctx.strokeStyle = getStrokeColor();
+      // Set stroke style - always black ink
+      ctx.strokeStyle = '#000000';
       ctx.lineWidth = 2;
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
@@ -206,7 +175,11 @@ export const SignatureCanvas = forwardRef<SignatureCanvasRef, SignatureCanvasPro
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
+      // Clear and fill with white background
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
       if (onChange) {
         onChange('');
       }
@@ -215,7 +188,7 @@ export const SignatureCanvas = forwardRef<SignatureCanvasRef, SignatureCanvasPro
     return (
       <div className={`space-y-2 ${className}`}>
         {label && <Label>{label}</Label>}
-        <div className="border-2 border-border rounded-md overflow-hidden bg-white dark:bg-gray-900">
+        <div className="border-2 border-border rounded-md overflow-hidden bg-white">
           <canvas
             ref={canvasRef}
             className="w-full cursor-crosshair touch-none block"
