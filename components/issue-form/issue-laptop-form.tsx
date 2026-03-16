@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useStaffStore } from '@/lib/stores/staff-store';
+import { useLoanStore } from '@/lib/stores/loan-store';
 import { LoanBrowserDialog } from '@/components/ui/loan-browser-dialog';
 import { AssetBrowserDialog } from '@/components/ui/asset-browser-dialog';
 import type { AssetRecord } from '@/lib/stores/asset-store';
@@ -31,6 +32,7 @@ export function IssueLaptopForm({ onSuccess }: IssueLaptopFormProps) {
   const [serialNumber, setSerialNumber] = useState<string>('');
 
   const { staff, loading: staffLoading, fetchStaff, getStaffByRole } = useStaffStore();
+  const { fetchLoans: refreshLoans } = useLoanStore();
 
   // Fetch staff on component mount
   useEffect(() => {
@@ -80,6 +82,16 @@ export function IssueLaptopForm({ onSuccess }: IssueLaptopFormProps) {
 
       if (!validationResult.ok || !validationResult.exists) {
         setStatus(`❌ Loan ID "${loanId}" not found. Please check and try again.`);
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Validate loan status
+      const loanStatus = validationResult.loan?.IdentityandStatus?.Value;
+      if (loanStatus !== 'Waiting IT Issue') {
+        setStatus(
+          `❌ This loan cannot be issued. Current status: "${loanStatus}". Only loans with status "Waiting IT Issue" can be issued.`
+        );
         setIsSubmitting(false);
         return;
       }
@@ -140,6 +152,10 @@ export function IssueLaptopForm({ onSuccess }: IssueLaptopFormProps) {
         setLoanId('');
         setMakeAndModel('');
         setSerialNumber('');
+
+        // Invalidate loan cache to ensure fresh data on next browse
+        refreshLoans(true);
+
         onSuccess?.();
       } else {
         setStatus(`❌ Error: ${result.error || 'Failed to submit'}`);
@@ -167,7 +183,7 @@ export function IssueLaptopForm({ onSuccess }: IssueLaptopFormProps) {
           onChange={(e) => setLoanId(e.target.value)}
           required
         />
-        <LoanBrowserDialog onSelectLoan={setLoanId} />
+        <LoanBrowserDialog onSelectLoan={setLoanId} statusFilter="Waiting IT Issue" />
       </div>
 
       {/* Device Information Section */}

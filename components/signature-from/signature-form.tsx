@@ -4,9 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
-import { DatePicker } from '@/components/ui/date-picker';
 import { SignatureCanvas } from '@/components/ui/signature-canvas';
 import { LoanBrowserDialog } from '@/components/ui/loan-browser-dialog';
+import { useLoanStore } from '@/lib/stores/loan-store';
 
 interface SignatureFormProps {
   onSuccess?: () => void;
@@ -15,12 +15,20 @@ interface SignatureFormProps {
 export function SignatureForm({ onSuccess }: SignatureFormProps) {
   const [status, setStatus] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [signatureDate, setSignatureDate] = useState<Date>();
   const [confirmReceipt, setConfirmReceipt] = useState(false);
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [agreeSignature, setAgreeSignature] = useState(false);
   const [signatureData, setSignatureData] = useState<string>('');
   const [loanId, setLoanId] = useState<string>('');
+
+  // Today's date for display
+  const todayDate = new Date().toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+
+  const { fetchLoans: refreshLoans } = useLoanStore();
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -34,13 +42,6 @@ export function SignatureForm({ onSuccess }: SignatureFormProps) {
     // Validate checkboxes
     if (!confirmReceipt || !agreeTerms || !agreeSignature) {
       setStatus('❌ Please check all required checkboxes');
-      setIsSubmitting(false);
-      return;
-    }
-
-    // Validate date
-    if (!signatureDate) {
-      setStatus('❌ Please select signature date');
       setIsSubmitting(false);
       return;
     }
@@ -62,6 +63,20 @@ export function SignatureForm({ onSuccess }: SignatureFormProps) {
         return;
       }
 
+      // Extract loan details for asset status update
+      const loanData = validationResult.loan;
+      const serialNumber = loanData?.SerialNumber;
+
+      // Validate loan status
+      const loanStatus = loanData?.IdentityandStatus?.Value;
+      if (loanStatus !== 'Ready For Collection') {
+        setStatus(
+          `❌ This loan cannot be signed. Current status: "${loanStatus}". Only loans with status "Ready For Collection" can be signed.`
+        );
+        setIsSubmitting(false);
+        return;
+      }
+
       // Step 2: Proceed with signature submission
       setStatus('📤 Submitting signature...');
       const submitData = {
@@ -70,7 +85,6 @@ export function SignatureForm({ onSuccess }: SignatureFormProps) {
         agreeTerms: agreeTerms,
         printedName: String(formData.get('printedName') ?? ''),
         agreeSignature: agreeSignature,
-        signatureDate: signatureDate.toISOString(),
         signatureImage: signatureData, // Canvas signature data
       };
 
@@ -83,14 +97,49 @@ export function SignatureForm({ onSuccess }: SignatureFormProps) {
       const result = await response.json();
 
       if (result.ok) {
-        setStatus('✅ Form submitted successfully!');
+        setStatus('✅ Signature submitted successfully!');
+
+        // Step 3: Update inventory status from "reserved for loan" to "loaned"
+        if (serialNumber) {
+          try {
+            setStatus('✅ Signature submitted! Updating inventory...');
+            const statusUpdateResponse = await fetch('/api/update-to-loaned', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                serialNumber: serialNumber,
+                loanId: loanId,
+              }),
+            });
+
+            const statusResult = await statusUpdateResponse.json();
+
+            if (statusResult.success) {
+              setStatus('✅ Signature submitted and asset status updated to loaned!');
+            } else {
+              console.warn('⚠️ Inventory update failed:', statusResult.error);
+              setStatus('✅ Signature submitted (inventory update pending - see console)');
+            }
+          } catch (inventoryError) {
+            console.warn('⚠️ Failed to update inventory status:', inventoryError);
+            setStatus('✅ Signature submitted (inventory update failed - see console)');
+          }
+        } else {
+          console.warn('⚠️ Missing serial number for inventory update');
+          setStatus('✅ Signature submitted (no inventory update - missing serial number)');
+        }
+
+        // Reset form
         form.reset();
-        setSignatureDate(undefined);
         setConfirmReceipt(false);
         setAgreeTerms(false);
         setAgreeSignature(false);
         setSignatureData('');
         setLoanId('');
+
+        // Invalidate loan cache to ensure fresh data on next browse
+        refreshLoans(true);
+
         onSuccess?.();
       } else {
         setStatus(`❌ Error: ${result.error || 'Failed to submit'}`);
@@ -118,7 +167,7 @@ export function SignatureForm({ onSuccess }: SignatureFormProps) {
           onChange={(e) => setLoanId(e.target.value)}
           required
         />
-        <LoanBrowserDialog onSelectLoan={setLoanId} />
+        <LoanBrowserDialog onSelectLoan={setLoanId} statusFilter="Ready For Collection" />
       </div>
 
       {/* Confirmation of Receipt Section */}
@@ -209,11 +258,9 @@ export function SignatureForm({ onSuccess }: SignatureFormProps) {
 
         <div className="space-y-2">
           <Label>Signature Date</Label>
-          <DatePicker
-            date={signatureDate}
-            onDateChange={setSignatureDate}
-            placeholder="Select signature date"
-          />
+          <div className="p-3 rounded-md bg-muted/50 border border-border">
+            <p className="text-sm font-medium">{todayDate}</p>
+          </div>
         </div>
       </div>
 

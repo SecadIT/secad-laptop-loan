@@ -3,28 +3,27 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { serialNumber, status, itOfficerEmail, loanId } = body;
+    const { serialNumber, itOfficerEmail, loanId } = body;
 
     // Validate required fields
-    if (!serialNumber || !itOfficerEmail) {
-      return NextResponse.json(
-        { error: 'Missing required fields: serialNumber, itOfficerEmail' },
-        { status: 400 }
-      );
+    if (!serialNumber) {
+      return NextResponse.json({ error: 'Missing required field: serialNumber' }, { status: 400 });
     }
 
-    const powerAutomateUrl = process.env.PA_UPDATE_ASSET_STATUS_URL;
+    const powerAutomateUrl = process.env.PA_UPDATE_TO_LOANED_URL;
 
     if (!powerAutomateUrl) {
-      return NextResponse.json({ error: 'Power Automate URL not configured' }, { status: 500 });
+      return NextResponse.json(
+        { error: 'Power Automate URL not configured. Please set PA_UPDATE_TO_LOANED_URL.' },
+        { status: 500 }
+      );
     }
 
     // Prepare data for Power Automate
     const updateData = {
       serialNumber,
-      status,
       itOfficerEmail,
-      ...(loanId && { loanId }), // Include loanId only if provided (for future use)
+      ...(loanId && { loanId }), // Include loanId if provided
     };
 
     const response = await fetch(powerAutomateUrl, {
@@ -39,7 +38,7 @@ export async function POST(req: NextRequest) {
       const errorText = await response.text();
       console.error('Power Automate error:', response.status, errorText);
       return NextResponse.json(
-        { error: 'Failed to update asset status', details: errorText },
+        { error: 'Failed to update asset to loaned status', details: errorText },
         { status: response.status }
       );
     }
@@ -56,11 +55,11 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: 'Asset status updated successfully',
+      message: 'Asset status updated to loaned successfully',
       data: result,
     });
   } catch (error) {
-    console.error('Error updating asset status:', error);
+    console.error('Error updating asset to loaned:', error);
     return NextResponse.json(
       {
         error: 'Internal server error',

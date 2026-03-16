@@ -23,17 +23,18 @@ import { Search } from 'lucide-react';
 
 interface LoanBrowserDialogProps {
   onSelectLoan: (loanId: string) => void;
+  statusFilter?: string; // Filter loans by status (e.g., "Waiting IT Issue")
 }
 
-export function LoanBrowserDialog({ onSelectLoan }: LoanBrowserDialogProps) {
+export function LoanBrowserDialog({ onSelectLoan, statusFilter }: LoanBrowserDialogProps) {
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const { loans, loading, fetchLoans } = useLoanStore();
 
-  // Fetch loans when dialog opens
+  // Fetch loans when dialog opens - always fetch fresh data to avoid stale cache
   useEffect(() => {
     if (open) {
-      fetchLoans();
+      fetchLoans(true); // Force refresh to get latest data from SharePoint
     }
   }, [open, fetchLoans]);
 
@@ -42,8 +43,14 @@ export function LoanBrowserDialog({ onSelectLoan }: LoanBrowserDialogProps) {
     setOpen(false);
   };
 
-  // Filter loans based on search query
+  // Filter loans based on search query and status
   const filteredLoans = loans.filter((loan) => {
+    // Filter by status if specified
+    if (statusFilter && loan.IdentityandStatus?.Value !== statusFilter) {
+      return false;
+    }
+
+    // Filter by search query
     const query = searchQuery.toLowerCase();
     return (
       loan.ID.toString().includes(query) ||
@@ -62,6 +69,11 @@ export function LoanBrowserDialog({ onSelectLoan }: LoanBrowserDialogProps) {
       <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Select a Loan</DialogTitle>
+          {statusFilter && (
+            <p className="text-sm text-muted-foreground mt-1">
+              Showing only loans with status: <strong>{statusFilter}</strong>
+            </p>
+          )}
         </DialogHeader>
 
         {/* Search Input */}
@@ -83,7 +95,11 @@ export function LoanBrowserDialog({ onSelectLoan }: LoanBrowserDialogProps) {
         ) : filteredLoans.length === 0 ? (
           <div className="flex justify-center py-8">
             <p className="text-muted-foreground">
-              {searchQuery ? 'No loans found matching your search' : 'No loans available'}
+              {searchQuery
+                ? 'No loans found matching your search'
+                : statusFilter
+                  ? `No loans with status "${statusFilter}"`
+                  : 'No loans available'}
             </p>
           </div>
         ) : (

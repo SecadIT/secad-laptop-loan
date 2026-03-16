@@ -1,8 +1,8 @@
-# Power Automate Flow Setup: Update Asset Status
+# Power Automate Flow Setup: Update Asset to Loaned
 
 ## Overview
 
-This flow updates the status of an asset in the Asset Manager SharePoint list when a laptop is issued to a loan.
+This flow updates the status of an asset to "Loaned" in the Asset Manager SharePoint list after a client signs for the equipment.
 
 ## Flow Configuration
 
@@ -20,20 +20,16 @@ This flow updates the status of an asset in the Asset Manager SharePoint list wh
       "type": "string",
       "description": "The serial number of the asset to update"
     },
-    "status": {
-      "type": "string",
-      "description": "Optional: Status hint (Power Automate maps to correct Choice value)"
-    },
     "itOfficerEmail": {
       "type": "string",
-      "description": "Email of the IT officer issuing the device"
+      "description": "Optional: Email of the IT officer who issued the device"
     },
     "loanId": {
       "type": "string",
-      "description": "Optional: Loan ID for tracking (requires SharePoint column)"
+      "description": "Loan ID for tracking"
     }
   },
-  "required": ["serialNumber", "itOfficerEmail"]
+  "required": ["serialNumber"]
 }
 ```
 
@@ -57,7 +53,7 @@ This flow updates the status of an asset in the Asset Manager SharePoint list wh
 - **Site Address**: Your SharePoint site
 - **List Name**: Asset Manager
 - **Id**: `body('Get_items')?['value'][0]?['ID']`
-- **Status**: `@{triggerBody()?['status']}`
+- **Status**: Select **"Loaned"** from the dropdown (Choice field)
 - **AssignedLoanId**: `@{triggerBody()?['loanId']}` (tracks which loan the asset is assigned to)
 - **LastModifiedBy**: `@{triggerBody()?['itOfficerEmail']}` (optional field)
 
@@ -70,10 +66,10 @@ This flow updates the status of an asset in the Asset Manager SharePoint list wh
 ```json
 {
   "success": true,
-  "message": "Asset status updated successfully",
+  "message": "Asset status updated to loaned successfully",
   "assetId": "@{body('Get_items')?['value'][0]?['ID']}",
   "serialNumber": "@{triggerBody()?['serialNumber']}",
-  "newStatus": "@{triggerBody()?['status']}"
+  "newStatus": "Loaned"
 }
 ```
 
@@ -101,7 +97,7 @@ After creating the flow:
 2. Add to `.env.local`:
 
 ```
-PA_UPDATE_ASSET_STATUS_URL=your-http-post-url-here
+PA_UPDATE_TO_LOANED_URL=your-http-post-url-here
 ```
 
 ## Testing the Flow
@@ -114,8 +110,7 @@ Content-Type: application/json
 
 {
   "serialNumber": "SN123456",
-  "status": "loaned",
-  "itOfficerEmail": "it.officer@example.com"
+  "loanId": "1"
 }
 ```
 
@@ -124,12 +119,21 @@ Content-Type: application/json
 ```json
 {
   "success": true,
-  "message": "Asset status updated successfully",
+  "message": "Asset status updated to loaned successfully",
   "assetId": "123",
   "serialNumber": "SN123456",
-  "newStatus": "loaned"
+  "newStatus": "Loaned"
 }
 ```
+
+## Integration Flow
+
+This flow is called as part of the signature submission process:
+
+1. Client fills out loan request form
+2. IT officer issues laptop (status → "Reserved for Loan")
+3. Client signs for equipment (triggers this flow)
+4. **Asset status updated to "Loaned"** ✅
 
 ## Error Handling
 
@@ -139,14 +143,13 @@ The flow includes:
 - ✅ 404 response if asset not found
 - ✅ Conditional update logic
 - ✅ Loan tracking via AssignedLoanId field
-- ⚠️ Application continues even if update fails (logs warning)
+- ⚠️ Application logs warnings if update fails but continues
 
 ## Notes
 
-- **Status field**: The frontend sends a status hint, but Power Automate should map this to the correct SharePoint Choice value (e.g., "reserved for loan" → "Reserved for Loan" choice)
-- **Primary purpose**: Track which loan each asset is assigned to via the `AssignedLoanId` text field
-- The IT officer email is tracked for audit purposes
-- Failed inventory updates don't block the main issue laptop flow
-- **Response handling**: The API now handles both JSON and non-JSON responses from Power Automate
-- All errors are logged to console for debugging
+- Status is set to the **"Loaned"** choice value (not a text string)
+- The IT officer email is optional at the signature stage
+- Failed inventory updates don't block the signature flow
+- The `AssignedLoanId` column tracks which loan each asset is assigned to
+- Signature date is automatically captured in the Power Automate flow using expression
 - All errors are logged to console for debugging

@@ -24,6 +24,9 @@ export function DownloadLoanPdf({ loan, variant = 'default', className }: Downlo
   }
 
   function downloadPdf() {
+    // Get the absolute URL for the logo
+    const logoUrl = `${window.location.origin}/branding/SECAD Logo (Classic).jpg`;
+
     // Create HTML content for the PDF
     const htmlContent = `
 <!DOCTYPE html>
@@ -41,10 +44,22 @@ export function DownloadLoanPdf({ loan, variant = 'default', className }: Downlo
       padding: 20px;
     }
     .header {
-      text-align: left;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
       border-bottom: 3px solid #2563eb;
       padding-bottom: 20px;
       margin-bottom: 30px;
+    }
+    .header-content {
+      flex: 1;
+    }
+    .header-logo {
+      margin-left: 20px;
+    }
+    .header-logo img {
+      max-width: 150px;
+      height: auto;
     }
     .header h1 {
       color: #1e40af;
@@ -112,9 +127,14 @@ export function DownloadLoanPdf({ loan, variant = 'default', className }: Downlo
 </head>
 <body>
   <div class="header">
-    <h1>Laptop Loan Record</h1>
-    <p>Generated on ${new Date().toLocaleString('en-IE')}</p>
-    <p>Loan ID: ${loan.ID}</p>
+    <div class="header-content">
+      <h1>Laptop Loan Record</h1>
+      <p>Generated on ${new Date().toLocaleString('en-IE')}</p>
+      <p>Loan ID: ${loan.ID}</p>
+    </div>
+    <div class="header-logo">
+      <img src="${logoUrl}" alt="SECAD Logo" />
+    </div>
   </div>
 
   <div class="section">
@@ -261,7 +281,7 @@ export function DownloadLoanPdf({ loan, variant = 'default', className }: Downlo
   return (
     <Button variant={variant} onClick={downloadPdf} className={className}>
       <Download className="mr-2 h-4 w-4" />
-      Download PDF
+      Print PDF
     </Button>
   );
 }

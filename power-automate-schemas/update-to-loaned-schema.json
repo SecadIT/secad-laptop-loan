@@ -1,0 +1,18 @@
+{
+  "type": "object",
+  "properties": {
+    "serialNumber": {
+      "type": "string",
+      "description": "The serial number of the asset to update"
+    },
+    "itOfficerEmail": {
+      "type": "string",
+      "description": "Optional: Email of the IT officer who issued the device"
+    },
+    "loanId": {
+      "type": "string",
+      "description": "Loan ID for tracking"
+    }
+  },
+  "required": ["serialNumber"]
+}
