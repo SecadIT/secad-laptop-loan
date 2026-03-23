@@ -40,7 +40,7 @@ export function Navigation() {
         <div className="flex justify-between items-center">
           <BrandingLogo />
           {/* Desktop Menu */}
-          <div className="hidden md:flex gap-6 ">
+          <div className="hidden md:flex gap-6">
             {navItems.map((item) => (
               <Link
                 key={item.href}

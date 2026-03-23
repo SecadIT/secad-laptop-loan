@@ -66,7 +66,7 @@ export function LoanBrowserDialog({ onSelectLoan, statusFilter }: LoanBrowserDia
       >
         Browse loans
       </DialogTrigger>
-      <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+      <DialogContent className="max-w-5xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Select a Loan</DialogTitle>
           {statusFilter && (

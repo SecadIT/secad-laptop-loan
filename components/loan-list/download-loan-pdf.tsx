@@ -296,7 +296,7 @@ export function DownloadLoanPdf({ loan, variant = 'default', className }: Downlo
   return (
     <Button variant={variant} onClick={downloadPdf} className={className}>
       <Download className="mr-2 h-4 w-4" />
-      Print PDF
+      Download PDF
     </Button>
   );
 }

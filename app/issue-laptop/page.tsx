@@ -7,7 +7,13 @@ export default function IssueLaptopPage() {
   return (
     <>
       <main className="min-h-screen p-4 sm:p-6 md:p-10 ">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-5xl mx-auto">
+          <div className="mb-6">
+            <h1 className="text-3xl font-bold">Issue Laptop</h1>
+            <p className="text-muted-foreground mt-2">
+              Record device and personnel information when issuing a laptop.
+            </p>
+          </div>
           <Card>
             <CardHeader>
               <CardTitle>Issue Laptop</CardTitle>

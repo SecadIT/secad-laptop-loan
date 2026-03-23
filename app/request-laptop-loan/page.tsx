@@ -7,7 +7,13 @@ export default function RequestLaptopLoanPage() {
   return (
     <>
       <main className="min-h-screen p-4 sm:p-6 md:p-10 ">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-5xl mx-auto">
+          <div className="mb-6">
+            <h1 className="text-3xl font-bold">Request Laptop Loan</h1>
+            <p className="text-muted-foreground mt-2">
+              Please fill out the form below to request a laptop loan.
+            </p>
+          </div>
           <Card>
             <CardHeader>
               <CardTitle>Equipment Loan Request Form</CardTitle>
