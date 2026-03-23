@@ -23,6 +23,7 @@ const navItems = [
   { name: 'Request Laptop Loan', href: '/request-laptop-loan' },
   { name: 'Issue Laptop', href: '/issue-laptop' },
   { name: 'Request Signature', href: '/request-signature' },
+  { name: 'Return Laptop', href: '/return-laptop' },
   { name: 'Loan List', href: '/loan-list' },
   { name: 'Inventory', href: '/inventory' },
 ];

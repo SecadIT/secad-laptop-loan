@@ -1,0 +1,47 @@
+{
+  "type": "object",
+  "properties": {
+    "loanId": {
+      "type": "string",
+      "description": "The loan ID to mark as returned"
+    },
+    "serialNumber": {
+      "type": "string",
+      "description": "Serial number of the asset being returned"
+    },
+    "returnDate": {
+      "type": "string",
+      "description": "Date the equipment was returned (ISO format)"
+    },
+    "condition": {
+      "type": "string",
+      "description": "Condition of returned equipment",
+      "enum": ["Good", "Fair", "Damaged"]
+    },
+    "damageNotes": {
+      "type": "string",
+      "description": "Notes about any damage (optional)"
+    },
+    "itemsReturned": {
+      "type": "string",
+      "description": "Comma-separated list of items returned"
+    },
+    "witnessName": {
+      "type": "string",
+      "description": "Name of staff member witnessing the return"
+    },
+    "witnessEmail": {
+      "type": "string",
+      "description": "Email of staff member witnessing the return"
+    }
+  },
+  "required": [
+    "loanId",
+    "serialNumber",
+    "returnDate",
+    "condition",
+    "itemsReturned",
+    "witnessName",
+    "witnessEmail"
+  ]
+}
