@@ -1,0 +1,18 @@
+{
+  "type": "object",
+  "properties": {
+    "email": {
+      "type": "string",
+      "description": "The user's SECAD email address"
+    },
+    "otp": {
+      "type": "string",
+      "description": "The 6-digit OTP code to send"
+    },
+    "expiresAt": {
+      "type": "string",
+      "description": "ISO timestamp when the OTP expires"
+    }
+  },
+  "required": ["email", "otp"]
+}
