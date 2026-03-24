@@ -2,6 +2,7 @@
 
 import { use, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { fetchApi } from '@/lib/api-client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import {
@@ -51,9 +52,8 @@ export default function AssetDetailPage({ params }: AssetDetailPageProps) {
     setLoanError(null);
 
     try {
-      const response = await fetch('/api/validate-loan', {
+      const response = await fetchApi('/api/validate-loan', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ loanId }),
       });
 
