@@ -16,7 +16,7 @@ export function LoadingSpinner({ size = 'md', className, text }: LoadingSpinnerP
 
   return (
     <div className={cn('flex flex-col items-center justify-center gap-2', className)}>
-      <Spinner className={sizeClasses[size]} />
+      <Spinner className={cn(sizeClasses[size], 'text-accent-blue')} />
       {text && <p className="text-sm text-muted-foreground">{text}</p>}
     </div>
   );

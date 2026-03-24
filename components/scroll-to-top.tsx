@@ -38,12 +38,12 @@ export function ScrollToTop() {
       size="icon"
       onClick={scrollToTop}
       className={cn(
-        'fixed bottom-8 right-8 z-50 h-10 w-10 rounded-full shadow-lg transition-all duration-300',
+        'fixed bottom-8 right-8 z-50 h-10 w-10 rounded-full shadow-lg transition-all duration-300 border-accent-blue hover:bg-accent-blue hover:text-accent-blue-foreground',
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16 pointer-events-none'
       )}
       aria-label="Scroll to top"
     >
-      <ArrowUp className="h-4 w-4" />
+      <ArrowUp className="h-4 w-4 text-accent-blue" />
     </Button>
   );
 }
