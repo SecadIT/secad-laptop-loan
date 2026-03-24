@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { fetchApi } from '@/lib/api-client';
 
 export interface LoanRecord {
   ID: number;
@@ -62,9 +63,8 @@ export const useLoanStore = create<LoanStore>((set, get) => ({
     try {
       set({ loading: true, error: '' });
 
-      const response = await fetch('/api/loans', {
+      const response = await fetchApi('/api/loans', {
         method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
       });
 
       if (!response.ok) {

@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { verifyApiRequest } from '@/lib/auth/verify-api-request';
 
 export async function GET(request: NextRequest) {
+  // Verify session and API key
+  const session = await verifyApiRequest(request);
+  if (!session) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   try {
     // Get Power Automate flow URL from environment variable
     const paFlowUrl = process.env.PA_STAFF_LIST_URL;

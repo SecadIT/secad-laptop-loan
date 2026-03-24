@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { fetchApi } from '@/lib/api-client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -49,9 +50,8 @@ export function SignatureForm({ onSuccess }: SignatureFormProps) {
     try {
       // Step 1: Validate loan ID exists
       setStatus('🔍 Validating loan ID...');
-      const validationResponse = await fetch('/api/validate-loan', {
+      const validationResponse = await fetchApi('/api/validate-loan', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ loanId }),
       });
 
@@ -88,9 +88,8 @@ export function SignatureForm({ onSuccess }: SignatureFormProps) {
         signatureImage: signatureData, // Canvas signature data
       };
 
-      const response = await fetch('/api/signature', {
+      const response = await fetchApi('/api/signature', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(submitData),
       });
 
@@ -103,9 +102,8 @@ export function SignatureForm({ onSuccess }: SignatureFormProps) {
         if (serialNumber) {
           try {
             setStatus('✅ Signature submitted! Updating inventory...');
-            const statusUpdateResponse = await fetch('/api/update-to-loaned', {
+            const statusUpdateResponse = await fetchApi('/api/update-to-loaned', {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 serialNumber: serialNumber,
                 loanId: loanId,

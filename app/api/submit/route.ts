@@ -1,4 +1,13 @@
-export async function POST(request: Request) {
+import { NextRequest, NextResponse } from 'next/server';
+import { verifyApiRequest } from '@/lib/auth/verify-api-request';
+
+export async function POST(request: NextRequest) {
+  // Verify session and API key
+  const session = await verifyApiRequest(request);
+  if (!session) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   try {
     const data = await request.json();
 

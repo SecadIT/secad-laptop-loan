@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { fetchApi } from '@/lib/api-client';
 
 export interface AssetRecord {
   ID: number;
@@ -73,9 +74,8 @@ export const useAssetStore = create<AssetStore>((set, get) => ({
     try {
       set({ loading: true, error: '' });
 
-      const response = await fetch('/api/assets', {
+      const response = await fetchApi('/api/assets', {
         method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
       });
 
       if (!response.ok) {

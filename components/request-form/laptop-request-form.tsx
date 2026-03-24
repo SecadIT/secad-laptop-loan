@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { fetchApi } from '@/lib/api-client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -95,9 +96,8 @@ export function LaptopRequestForm({ onSuccess }: LaptopRequestFormProps) {
     };
 
     try {
-      const response = await fetch('/api/submit', {
+      const response = await fetchApi('/api/submit', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(submitData),
       });
 

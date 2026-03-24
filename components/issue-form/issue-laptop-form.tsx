@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { fetchApi } from '@/lib/api-client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -72,9 +73,8 @@ export function IssueLaptopForm({ onSuccess }: IssueLaptopFormProps) {
     try {
       // Step 1: Validate loan ID exists
       setStatus('🔍 Validating loan ID...');
-      const validationResponse = await fetch('/api/validate-loan', {
+      const validationResponse = await fetchApi('/api/validate-loan', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ loanId }),
       });
 
@@ -107,9 +107,8 @@ export function IssueLaptopForm({ onSuccess }: IssueLaptopFormProps) {
         nameSecadITAssistant: itDetails.User.DisplayName,
       };
 
-      const response = await fetch('/api/issue-laptop', {
+      const response = await fetchApi('/api/issue-laptop', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(submitData),
       });
 
@@ -121,9 +120,8 @@ export function IssueLaptopForm({ onSuccess }: IssueLaptopFormProps) {
         // Step 3: Update inventory status to "loaned"
         try {
           setStatus('✅ Form submitted! Updating inventory...');
-          const statusUpdateResponse = await fetch('/api/update-asset-status', {
+          const statusUpdateResponse = await fetchApi('/api/update-asset-status', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               serialNumber: submitData.serialNumber,
               status: 'loaned',

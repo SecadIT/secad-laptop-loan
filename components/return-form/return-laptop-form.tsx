@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { fetchApi } from '@/lib/api-client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -77,9 +78,8 @@ export function ReturnLaptopForm({ onSuccess }: ReturnLaptopFormProps) {
       if (!loanId || isSubmitting) return;
 
       try {
-        const response = await fetch('/api/validate-loan', {
+        const response = await fetchApi('/api/validate-loan', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ loanId }),
         });
 
@@ -152,9 +152,8 @@ export function ReturnLaptopForm({ onSuccess }: ReturnLaptopFormProps) {
     try {
       // Step 1: Validate loan ID exists
       setStatus('🔍 Validating loan ID...');
-      const validationResponse = await fetch('/api/validate-loan', {
+      const validationResponse = await fetchApi('/api/validate-loan', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ loanId }),
       });
 
@@ -189,9 +188,8 @@ export function ReturnLaptopForm({ onSuccess }: ReturnLaptopFormProps) {
       // Step 2: Process the return
       setStatus('📥 Processing laptop return...');
 
-      const returnResponse = await fetch('/api/return-laptop', {
+      const returnResponse = await fetchApi('/api/return-laptop', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           loanId,
           serialNumber: loanSerialNumber,

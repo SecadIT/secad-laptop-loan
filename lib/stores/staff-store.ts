@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { fetchApi } from '@/lib/api-client';
 
 export interface StaffMember {
   ID: number;
@@ -48,9 +49,8 @@ export const useStaffStore = create<StaffStore>((set, get) => ({
     try {
       set({ loading: true, error: '' });
 
-      const response = await fetch('/api/staff', {
+      const response = await fetchApi('/api/staff', {
         method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
       });
 
       if (!response.ok) {
