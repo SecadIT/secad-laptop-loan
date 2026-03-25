@@ -4,7 +4,7 @@ import { ReturnLaptopForm } from '@/components/return-form/return-laptop-form';
 export default function ReturnLaptopPage() {
   return (
     <main className="min-h-screen p-4 sm:p-6 md:p-10 ">
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <div className="mb-6">
           <h1 className="text-3xl font-bold">Return Laptop</h1>
           <p className="text-muted-foreground mt-2">

@@ -30,7 +30,6 @@ import {
 import { BrandingLogo } from './branding/logo';
 import { useSession } from '@/lib/hooks/use-session';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
 import { useTheme } from 'next-themes';
 
 const navItems = [
@@ -83,7 +82,7 @@ export function AppSidebar() {
                       render={(props) => <Link href={item.href} {...props} />}
                       isActive={isActive}
                     >
-                      <Icon />
+                      <Icon className="text-accent-blue" />
                       <span>{item.name}</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -94,7 +93,7 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="border-t bg-black/5 backdrop-blur supports-[backdrop-filter]:bg-background/60 p-4">
+      <SidebarFooter className="border-t">
         {user && (
           <div className="space-y-3">
             <div className="flex items-center gap-2 px-2">
@@ -132,6 +131,11 @@ export function AppSidebar() {
                 Logout
               </Button>
             </div>
+          </div>
+        )}
+        {!user && (
+          <div className="text-center">
+            <span className="text-sm text-muted-foreground">Not logged in</span>
           </div>
         )}
       </SidebarFooter>

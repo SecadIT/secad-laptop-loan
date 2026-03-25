@@ -10,7 +10,7 @@ export const BrandingLogo = () => {
         width={120}
         height={40}
         priority
-        className="object-contain mix-blend-multiply dark:mix-blend-normal dark:invert"
+        className="object-contain rounded"
       />
     </div>
   );

@@ -198,7 +198,6 @@ export function InventoryTable() {
                 <TableHead>Status</TableHead>
                 <TableHead>Condition</TableHead>
                 <TableHead>Created</TableHead>
-                <TableHead>Action</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -210,13 +209,16 @@ export function InventoryTable() {
                 </TableRow>
               ) : (
                 paginatedAssets.map((asset) => (
-                  <TableRow key={asset.ID} className="hover:bg-muted/50 transition-colors">
-                    <TableCell className="font-medium">{asset.ID}</TableCell>
+                  <TableRow
+                    role="button"
+                    key={asset.ID}
+                    className="hover:bg-muted/50 transition-colors cursor-pointer hover:text-primary text-xs text-muted-foreground"
+                    onClick={() => handleRowClick(asset)}
+                  >
+                    <TableCell className="">{asset.ID}</TableCell>
                     <TableCell>{asset.AssetType?.Value || 'N/A'}</TableCell>
                     <TableCell>{asset.Manufacturer?.Value || 'N/A'}</TableCell>
-                    <TableCell className="font-mono text-sm">
-                      {asset.SerialNumber || 'N/A'}
-                    </TableCell>
+                    <TableCell>{asset.SerialNumber || 'N/A'}</TableCell>
                     <TableCell>{asset.Color?.Value || 'N/A'}</TableCell>
                     <TableCell>
                       <span
@@ -229,13 +231,8 @@ export function InventoryTable() {
                         {asset.Status?.Value || 'N/A'}
                       </span>
                     </TableCell>
-                    <TableCell className="text-sm">{asset.Condition?.Value || 'N/A'}</TableCell>
-                    <TableCell className="text-sm">{formatDate(asset.Created)}</TableCell>
-                    <TableCell>
-                      <Button size="sm" variant="outline" onClick={() => handleRowClick(asset)}>
-                        Show Detail
-                      </Button>
-                    </TableCell>
+                    <TableCell>{asset.Condition?.Value || 'N/A'}</TableCell>
+                    <TableCell>{formatDate(asset.Created)}</TableCell>
                   </TableRow>
                 ))
               )}

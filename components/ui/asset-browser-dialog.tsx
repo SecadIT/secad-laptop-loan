@@ -81,7 +81,7 @@ export function AssetBrowserDialog({
       >
         Browse inventory
       </DialogTrigger>
-      <DialogContent className="max-w-5xl max-h-[80vh] overflow-y-auto">
+      <DialogContent className="max-w-6xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
             Select a {assetType} ({statusFilter})

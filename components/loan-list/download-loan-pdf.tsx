@@ -77,10 +77,9 @@ export function DownloadLoanPdf({ loan, variant = 'default', className }: Downlo
     .section-title {
       background-color: #dbeafe;
       color: #1e40af;
-      padding: 10px 15px;
-      font-size: 18px;
+      
+      font-size: 16px;
       font-weight: bold;
-      border-left: 4px solid #2563eb;
       margin-bottom: 15px;
     }
     .field-group {

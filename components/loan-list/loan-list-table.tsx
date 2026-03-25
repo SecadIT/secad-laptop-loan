@@ -206,7 +206,6 @@ export function LoanListTable() {
                 <TableHead>Loan Date</TableHead>
                 <TableHead>Return Date</TableHead>
                 <TableHead>Approver</TableHead>
-                <TableHead>Action</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -218,8 +217,13 @@ export function LoanListTable() {
                 </TableRow>
               ) : (
                 paginatedLoans.map((loan) => (
-                  <TableRow key={loan.ID} className="hover:bg-muted/50 transition-colors">
-                    <TableCell className="font-medium">{loan.ClientName}</TableCell>
+                  <TableRow
+                    role="button"
+                    key={loan.ID}
+                    className="hover:bg-muted/50 transition-colors text-xs text-muted-foreground cursor-pointer hover:text-primary"
+                    onClick={() => handleRowClick(loan)}
+                  >
+                    <TableCell className="">{loan.ClientName}</TableCell>
                     <TableCell>
                       <span className="text-xs bg-muted px-2 py-1 rounded">
                         {loan.IdentityandStatus?.Value || 'N/A'}
@@ -230,17 +234,7 @@ export function LoanListTable() {
                     <TableCell>{loan.DevelopmentOfficerName}</TableCell>
                     <TableCell>{formatDate(loan.Equipmentloandate)}</TableCell>
                     <TableCell>{formatDate(loan.Agreedequipmentreturndate)}</TableCell>
-                    <TableCell className="text-sm">{loan.SelectedApprover}</TableCell>
-                    <TableCell>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handleRowClick(loan)}
-                        className="cursor-pointer"
-                      >
-                        Show Detail
-                      </Button>
-                    </TableCell>
+                    <TableCell>{loan.SelectedApprover}</TableCell>
                   </TableRow>
                 ))
               )}

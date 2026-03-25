@@ -89,7 +89,7 @@ export default function AssetDetailPage({ params }: AssetDetailPageProps) {
   if (loading) {
     return (
       <main className="min-h-screen p-4 sm:p-6 md:p-10 ">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <Card>
             <CardContent className="pt-6 py-8">
               <LoadingSpinner text="Loading asset details..." />
@@ -103,7 +103,7 @@ export default function AssetDetailPage({ params }: AssetDetailPageProps) {
   if (!asset) {
     return (
       <main className="min-h-screen p-4 sm:p-6 md:p-10 ">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <Card>
             <CardContent className="pt-6">
               <p className="text-center text-red-500">Asset not found</p>
@@ -119,7 +119,7 @@ export default function AssetDetailPage({ params }: AssetDetailPageProps) {
 
   return (
     <main className="min-h-screen p-4 sm:p-6 md:p-10 ">
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <div className="mb-6">
           <Button variant="ghost" onClick={() => router.push('/inventory')}>
             <ChevronLeft className="mr-2 h-4 w-4" />

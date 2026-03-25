@@ -50,7 +50,7 @@ export default function LoanDetailPage({ params }: LoanDetailPageProps) {
   if (!loan) {
     return (
       <main className="min-h-screen p-4 sm:p-6 md:p-10 ">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <Card>
             <CardContent className="pt-6">
               <p className="text-center text-red-500">Loan not found</p>
@@ -66,7 +66,7 @@ export default function LoanDetailPage({ params }: LoanDetailPageProps) {
 
   return (
     <main className="min-h-screen p-4 sm:p-6 md:p-10 ">
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <div className="mb-6">
           <Button variant="ghost" onClick={() => router.push('/loan-list')}>
             <ChevronLeft className="mr-2 h-4 w-4" />

@@ -56,7 +56,7 @@ export function TermsDialog({
         <DialogTrigger render={<Button variant="outline" type="button" className="w-full" />}>
           {triggerText}
         </DialogTrigger>
-        <DialogContent className="max-w-full sm:max-w-2xl md:max-w-3xl lg:max-w-5xl max-h-[80vh] overflow-y-auto">
+        <DialogContent className="max-w-full sm:max-w-2xl md:max-w-3xl lg:max-w-6xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Terms and Conditions</DialogTitle>
             <DialogDescription>
