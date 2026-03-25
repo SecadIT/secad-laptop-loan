@@ -39,7 +39,46 @@ Create a flow that starts with **"When a HTTP request is received"** trigger.
 }
 ```
 
-### 2. Add Actions
+### 2. Security: API Key Validation (REQUIRED)
+
+**IMPORTANT:** Add a Condition action immediately after the HTTP trigger to validate the API key. This prevents unauthorized access to your flow.
+
+#### Steps:
+
+1. **Add a Condition action** after the HTTP trigger
+2. **Configure the Condition:**
+   - Click in the first input field and select **"headers"** from Dynamic content (under "When a HTTP request is received")
+   - Type `?['x-pa-api-key']` after `headers` to access the header
+   - The full expression should be: `headers?['x-pa-api-key']`
+   - Operator: **is equal to**
+   - Value: Paste your `PA_API_KEY` value from `.env.local` (e.g., `uLPdeC6uILSQnfH8pRmfvtbzktK2V3kQiOSbWe+jb9k=`)
+
+3. **Configure "If yes" branch:**
+   - Add all your normal flow actions here (SharePoint, email, etc.)
+   - This is where the flow continues when the API key is valid
+
+4. **Configure "If no" branch:**
+   - Add a **"Response"** action
+   - Status Code: `401`
+   - Body:
+     ```json
+     {
+       "ok": false,
+       "error": "Unauthorized - Invalid API key"
+     }
+     ```
+   - Add a **"Terminate"** action
+   - Status: **Failed**
+   - This stops the flow immediately if the API key is invalid
+
+#### Why This Is Important:
+
+- Without API key validation, anyone with your flow URL could send requests
+- The flow URL is included in the Next.js app, so it's not truly secret
+- API key validation adds a security layer that prevents unauthorized access
+- Even if someone discovers your flow URL, they still need the API key
+
+### 3. Add Actions
 
 After the HTTP trigger, add your desired actions:
 
@@ -60,7 +99,7 @@ Example SharePoint columns to create:
 
 **Note:** The SignatureImage field stores the complete base64-encoded PNG image (e.g., `data:image/png;base64,iVBORw0KGgo...`). This allows the signature to be displayed in the Next.js app and PDF exports exactly as the client drew it.
 
-### 3. Response Action
+### 4. Response Action
 
 Add a **"Response"** action at the end:
 
@@ -73,7 +112,7 @@ Add a **"Response"** action at the end:
   }
   ```
 
-### 4. Get Flow URL
+### 5. Get Flow URL
 
 1. Save your flow
 2. Go back to the HTTP trigger

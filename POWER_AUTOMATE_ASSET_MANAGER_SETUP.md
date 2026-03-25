@@ -29,7 +29,46 @@ This flow retrieves all items from the Asset Manager SharePoint list and returns
    - Leave **Request Body JSON Schema** empty (not needed for GET)
 2. The flow will generate a URL after you save it
 
-### 3. Add Get Items Action
+### 3. Security: API Key Validation (REQUIRED)
+
+**IMPORTANT:** Add a Condition action immediately after the HTTP trigger to validate the API key. This prevents unauthorized access to your flow.
+
+#### Steps:
+
+1. **Add a Condition action** after the HTTP trigger
+2. **Configure the Condition:**
+   - Click in the first input field and select **"headers"** from Dynamic content (under "When an HTTP request is received")
+   - Type `?['x-pa-api-key']` after `headers` to access the header
+   - The full expression should be: `headers?['x-pa-api-key']`
+   - Operator: **is equal to**
+   - Value: Paste your `PA_API_KEY` value from `.env.local` (e.g., `uLPdeC6uILSQnfH8pRmfvtbzktK2V3kQiOSbWe+jb9k=`)
+
+3. **Configure "If yes" branch:**
+   - Add all your normal flow actions here (Get items, Variables, Response, etc.)
+   - This is where the flow continues when the API key is valid
+
+4. **Configure "If no" branch:**
+   - Add a **"Response"** action
+   - Status Code: `401`
+   - Body:
+     ```json
+     {
+       "ok": false,
+       "error": "Unauthorized - Invalid API key"
+     }
+     ```
+   - Add a **"Terminate"** action
+   - Status: **Failed**
+   - This stops the flow immediately if the API key is invalid
+
+#### Why This Is Important:
+
+- Without API key validation, anyone with your flow URL could send requests
+- The flow URL is embedded in the Next.js app, so it's not truly secret
+- API key validation adds a security layer that prevents unauthorized access
+- Even if someone discovers your flow URL, they still need the API key
+
+### 4. Add Get Items Action
 
 1. Click **+ New step**
 2. Search for "SharePoint" and select **Get items**
@@ -38,7 +77,7 @@ This flow retrieves all items from the Asset Manager SharePoint list and returns
    - **List Name**: Select your "Asset Manager" list
    - **Top Count**: Leave blank or set to a high number (e.g., 5000) to get all items
 
-### 4. Initialize Assets Array Variable
+### 5. Initialize Assets Array Variable
 
 1. Click **+ New step**
 2. Search for "Variables" and select **Initialize variable**
@@ -47,7 +86,7 @@ This flow retrieves all items from the Asset Manager SharePoint list and returns
    - **Type**: Array
    - **Value**: Leave empty
 
-### 5. Loop Through Items and Build Response
+### 6. Loop Through Items and Build Response
 
 1. Click **+ New step**
 2. Search for "Apply to each" and select it
@@ -76,7 +115,7 @@ This flow retrieves all items from the Asset Manager SharePoint list and returns
    }
    ```
 
-### 6. Add Response Action
+### 7. Add Response Action
 
 1. After the **Apply to each** loop, click **+ New step**
 2. Search for "Response" and select **Response**
@@ -92,7 +131,7 @@ This flow retrieves all items from the Asset Manager SharePoint list and returns
      }
      ```
 
-### 7. Save and Get the Flow URL
+### 8. Save and Get the Flow URL
 
 1. Click **Save** at the top
 2. Go back to the **When an HTTP request is received** trigger
