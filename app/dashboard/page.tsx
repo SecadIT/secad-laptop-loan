@@ -36,60 +36,17 @@ export default function DashboardPage() {
     fetchStaff();
   }, [fetchAssets, fetchLoans, fetchStaff]);
 
-  // Debug: Console log actual data structure
-  useEffect(() => {
-    if (assets.length > 0) {
-      console.group('📦 ASSET DATA STRUCTURE');
-      console.log('Total assets:', assets.length);
-      console.log('First asset sample:', assets[0]);
-      console.log('All unique asset statuses:', [...new Set(assets.map((a) => a.Status?.Value))]);
-      console.log('Assets by status:', {
-        Available: assets.filter((a) => a.Status?.Value === 'Available').length,
-        Reserved: assets.filter((a) => a.Status?.Value === 'Reserved').length,
-        'In Use': assets.filter((a) => a.Status?.Value === 'In Use').length,
-        'In Repair': assets.filter((a) => a.Status?.Value === 'In Repair').length,
-        Retired: assets.filter((a) => a.Status?.Value === 'Retired').length,
-        'Reserved For Loan': assets.filter((a) => a.Status?.Value === 'Reserved For Loan').length,
-      });
-      console.groupEnd();
-    }
-
-    if (loans.length > 0) {
-      console.group('📋 LOAN DATA STRUCTURE');
-      console.log('Total loans:', loans.length);
-      console.log('First loan sample:', loans[0]);
-      console.log('All unique loan statuses:', [
-        ...new Set(loans.map((l) => l.IdentityandStatus?.Value)),
-      ]);
-      console.log('Loans by status:', {
-        Draft: loans.filter((l) => l.IdentityandStatus?.Value === 'Draft').length,
-        Submitted: loans.filter((l) => l.IdentityandStatus?.Value === 'Submitted').length,
-        Approved: loans.filter((l) => l.IdentityandStatus?.Value === 'Approved').length,
-        'Waiting IT Issue': loans.filter((l) => l.IdentityandStatus?.Value === 'Waiting IT Issue')
-          .length,
-        'Ready For Collection': loans.filter(
-          (l) => l.IdentityandStatus?.Value === 'Ready For Collection'
-        ).length,
-        'Client Confirmed': loans.filter((l) => l.IdentityandStatus?.Value === 'Client Confirmed')
-          .length,
-        Returned: loans.filter((l) => l.IdentityandStatus?.Value === 'Returned').length,
-        Rejected: loans.filter((l) => l.IdentityandStatus?.Value === 'Rejected').length,
-      });
-      console.groupEnd();
-    }
-  }, [assets, loans]);
-
   // Asset Stats
   const assetStats = useMemo(() => {
     const total = assets.length;
     const available = assets.filter((a) => a.Status?.Value === 'Available').length;
-    const reserved = assets.filter((a) => a.Status?.Value === 'Reserved').length;
+    const loanedOut = assets.filter((a) => a.Status?.Value === 'Loaned Out').length;
     const inUse = assets.filter((a) => a.Status?.Value === 'In Use').length;
     const inRepair = assets.filter((a) => a.Status?.Value === 'In Repair').length;
     const retired = assets.filter((a) => a.Status?.Value === 'Retired').length;
     const reservedForLoan = assets.filter((a) => a.Status?.Value === 'Reserved For Loan').length;
 
-    return { total, available, reserved, inUse, inRepair, retired, reservedForLoan };
+    return { total, available, loanedOut, inUse, inRepair, retired, reservedForLoan };
   }, [assets]);
 
   // Loan Stats
@@ -253,7 +210,7 @@ export default function DashboardPage() {
             <h2 className="text-xl font-semibold mb-4">Asset Overview</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <StatsCard title="Available" value={assetStats.available} icon={CheckCircle2} />
-              <StatsCard title="Reserved" value={assetStats.reserved} icon={Shield} />
+              <StatsCard title="Loaned Out" value={assetStats.loanedOut} icon={Shield} />
               <StatsCard title="In Use" value={assetStats.inUse} icon={Monitor} />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
