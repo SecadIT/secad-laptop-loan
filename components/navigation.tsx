@@ -20,6 +20,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 const navItems = [
+  { name: 'Dashboard', href: '/dashboard' },
   { name: 'Request Laptop Loan', href: '/request-laptop-loan' },
   { name: 'Issue Laptop', href: '/issue-laptop' },
   { name: 'Request Signature', href: '/request-signature' },

@@ -187,8 +187,8 @@ Add these actions:
 - [ ] Security validation working as expected
 - [ ] Ready to roll out to remaining routes
 
-**Tested by:** ********\_\_\_********  
-**Date:** ********\_\_\_********  
+**Tested by:** **\*\*\*\***\_\_\_**\*\*\*\***  
+**Date:** **\*\*\*\***\_\_\_**\*\*\*\***  
 **Approved for rollout:** [ ] Yes [ ] No
 
 ## Rollout Strategy
