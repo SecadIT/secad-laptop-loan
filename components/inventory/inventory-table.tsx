@@ -28,6 +28,25 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
 export function InventoryTable() {
   const router = useRouter();
+
+  const getStatusColor = (status: string | undefined) => {
+    switch (status) {
+      case 'Available':
+        return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
+      case 'Loaned Out':
+        return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200';
+      case 'In Use':
+        return 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200';
+      case 'In Repair':
+        return 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200';
+      case 'Retired':
+        return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
+      case 'Reserved For Loan':
+        return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200';
+      default:
+        return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200';
+    }
+  };
   const { assets, loading, error, fetchAssets } = useAssetStore();
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -222,11 +241,9 @@ export function InventoryTable() {
                     <TableCell>{asset.Color?.Value || 'N/A'}</TableCell>
                     <TableCell>
                       <span
-                        className={`text-xs px-2 py-1 rounded ${
-                          asset.Status?.Value === 'Available'
-                            ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                            : 'bg-muted'
-                        }`}
+                        className={`text-xs px-2 py-1 rounded font-medium ${getStatusColor(
+                          asset.Status?.Value
+                        )}`}
                       >
                         {asset.Status?.Value || 'N/A'}
                       </span>
