@@ -289,7 +289,7 @@ export function LoanListTable() {
               </Select>
             </div>
 
-            <div className="flex items-center gap-6 w-full md:w-auto justify-between md:justify-end">
+            <div className="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end">
               <span className="hidden md:inline text-sm text-muted-foreground">
                 Page {currentPage} of {totalPages} • Showing {(currentPage - 1) * itemsPerPage + 1}-
                 {Math.min(currentPage * itemsPerPage, filteredLoans.length)} of{' '}

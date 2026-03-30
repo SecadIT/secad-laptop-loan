@@ -178,7 +178,7 @@ export default function DashboardPage() {
   const loading = assetsLoading || loansLoading;
 
   return (
-    <div className="container mx-auto px-4 py-6 space-y-8">
+    <div className="container mx-auto px-4 py-6 space-y-4">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
@@ -186,6 +186,9 @@ export default function DashboardPage() {
           <p className="text-muted-foreground mt-1">Overview of inventory and loan management</p>
         </div>
         <div className="flex gap-2">
+          <Link href="/request-laptop-loan">
+            <Button variant="outline">Request New Loan</Button>
+          </Link>
           <Link href="/issue-laptop">
             <Button className="gap-2">
               <Laptop className="w-4 h-4" />
@@ -202,14 +205,14 @@ export default function DashboardPage() {
       ) : (
         <>
           {/* Asset Stats */}
-          <div>
-            <h2 className="text-xl font-semibold mb-4">Asset Overview</h2>
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold">Asset Overview</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <StatsCard title="Available" value={assetStats.available} icon={CheckCircle2} />
               <StatsCard title="Loaned Out" value={assetStats.loanedOut} icon={Shield} />
               <StatsCard title="In Use" value={assetStats.inUse} icon={Monitor} />
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <StatsCard title="In Repair" value={assetStats.inRepair} icon={Wrench} />
               <StatsCard title="Retired" value={assetStats.retired} icon={Archive} />
               <StatsCard
@@ -218,17 +221,20 @@ export default function DashboardPage() {
                 icon={Package}
               />
             </div>
+            <Link href="/inventory">
+              <Button variant="outline">View All Assets</Button>
+            </Link>
           </div>
 
           {/* Loan Stats */}
-          <div>
-            <h2 className="text-xl font-semibold mb-4">Loan Overview</h2>
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold">Loan Overview</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <StatsCard title="Submitted" value={loanStats.submitted} icon={Clock} />
               <StatsCard title="Approved" value={loanStats.approved} icon={CheckCircle2} />
               <StatsCard title="Waiting IT Issue" value={loanStats.waitingItIssue} icon={Laptop} />
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <StatsCard
                 title="Ready For Collection"
                 value={loanStats.readyForCollection}
@@ -237,10 +243,13 @@ export default function DashboardPage() {
               <StatsCard title="Client Confirmed" value={loanStats.clientConfirmed} icon={Users} />
               <StatsCard title="Returned" value={loanStats.returned} icon={CheckCircle2} />
             </div>
+            <Link href="/loan-list">
+              <Button variant="outline">View All Loans</Button>
+            </Link>
           </div>
 
           {/* Charts Section */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <BarChartCard
               title="Assets by Type"
               description="Distribution of assets across different categories"
@@ -254,7 +263,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Breakdown Lists */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <BreakdownListCard
               title="Assets by Status"
               description="Current status distribution of all assets"
@@ -279,17 +288,14 @@ export default function DashboardPage() {
 
           {/* Quick Links */}
           <div className="flex flex-wrap gap-4">
-            <Link href="/inventory">
-              <Button variant="outline">View All Assets</Button>
-            </Link>
-            <Link href="/loan-list">
-              <Button variant="outline">View All Loans</Button>
-            </Link>
             <Link href="/request-laptop-loan">
               <Button variant="outline">Request New Loan</Button>
             </Link>
-            <Link href="/request-signature">
-              <Button variant="outline">Request Signature</Button>
+            <Link href="/issue-laptop">
+              <Button className="gap-2">
+                <Laptop className="w-4 h-4" />
+                Issue Laptop
+              </Button>
             </Link>
           </div>
         </>
