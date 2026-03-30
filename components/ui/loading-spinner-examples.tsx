@@ -50,7 +50,7 @@ export function FullPageLoadingExample() {
 // Example 4: Card loading state
 export function CardLoadingExample() {
   return (
-    <div className="rounded-lg border p-8">
+    <div className="rounded border p-8">
       <LoadingSpinner text="Fetching data..." />
     </div>
   );

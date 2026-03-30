@@ -188,7 +188,7 @@ export const SignatureCanvas = forwardRef<SignatureCanvasRef, SignatureCanvasPro
     return (
       <div className={`space-y-2 ${className}`}>
         {label && <Label>{label}</Label>}
-        <div className="border-2 border-border rounded-md overflow-hidden bg-white">
+        <div className="border-2 border-border rounded overflow-hidden bg-white">
           <canvas
             ref={canvasRef}
             className="w-full cursor-crosshair touch-none block"

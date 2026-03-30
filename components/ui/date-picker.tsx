@@ -19,7 +19,7 @@ export function DatePicker({ date, onDateChange, placeholder = 'Pick a date' }: 
     <Popover>
       <PopoverTrigger
         className={cn(
-          'flex w-full items-center justify-start gap-2 rounded-lg border border-input bg-background px-3 py-2 text-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50',
+          'flex w-full items-center justify-start gap-2 rounded border border-input bg-background px-3 py-2 text-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50',
           !date && 'text-muted-foreground'
         )}
       >

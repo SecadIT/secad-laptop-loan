@@ -193,7 +193,7 @@ export default function LoanDetailPage({ params }: LoanDetailPageProps) {
             {loan.SignatureImage && (
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold border-b pb-2">Client Signature</h3>
-                <div className="bg-muted/30 p-4 rounded-lg border-2 border-border inline-block">
+                <div className="bg-muted/30 p-4 rounded border-2 border-border inline-block">
                   <img
                     src={loan.SignatureImage}
                     alt="Client Signature"

@@ -336,7 +336,7 @@ export function ReturnLaptopForm({ onSuccess }: ReturnLaptopFormProps) {
         <Label>
           Items Returned <span className="text-red-500">*</span>
         </Label>
-        <div className="space-y-2 border rounded-md p-4">
+        <div className="space-y-2 border rounded p-4">
           {ITEMS_CHECKLIST.map((item) => (
             <div key={item} className="flex items-center space-x-2">
               <Checkbox
@@ -382,7 +382,7 @@ export function ReturnLaptopForm({ onSuccess }: ReturnLaptopFormProps) {
       </div>
 
       {/* Confirmation */}
-      <div className="flex items-start space-x-2 border rounded-md p-4 bg-muted/50">
+      <div className="flex items-start space-x-2 border rounded p-4 bg-muted/50">
         <Checkbox
           id="confirmReturn"
           checked={confirmReturn}
@@ -398,7 +398,7 @@ export function ReturnLaptopForm({ onSuccess }: ReturnLaptopFormProps) {
       {/* Status Message */}
       {status && (
         <div
-          className={`p-4 rounded-md ${
+          className={`p-4 rounded ${
             status.includes('✅')
               ? 'bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-200'
               : status.includes('❌')

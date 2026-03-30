@@ -113,7 +113,7 @@ export function AssetBrowserDialog({
             </p>
           </div>
         ) : (
-          <div className="rounded-md border">
+          <div className="rounded border">
             <Table>
               <TableHeader>
                 <TableRow>

@@ -24,7 +24,7 @@ export default function ReturnLaptopPage() {
           </CardContent>
         </Card>
 
-        <div className="mt-6 p-4 border rounded-md bg-muted/30">
+        <div className="mt-6 p-4 border rounded bg-muted/30">
           <h3 className="font-semibold mb-2 text-sm">Return Process</h3>
           <ol className="text-sm text-muted-foreground space-y-1 list-decimal list-inside">
             <li>Select the loan to return (must have status "Client Confirmed")</li>

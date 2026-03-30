@@ -52,7 +52,6 @@ export default function DashboardPage() {
   // Loan Stats
   const loanStats = useMemo(() => {
     const total = loans.length;
-    const draft = loans.filter((l) => l.IdentityandStatus?.Value === 'Draft').length;
     const submitted = loans.filter((l) => l.IdentityandStatus?.Value === 'Submitted').length;
     const approved = loans.filter((l) => l.IdentityandStatus?.Value === 'Approved').length;
     const waitingItIssue = loans.filter(
@@ -65,18 +64,15 @@ export default function DashboardPage() {
       (l) => l.IdentityandStatus?.Value === 'Client Confirmed'
     ).length;
     const returned = loans.filter((l) => l.IdentityandStatus?.Value === 'Returned').length;
-    const rejected = loans.filter((l) => l.IdentityandStatus?.Value === 'Rejected').length;
 
     return {
       total,
-      draft,
       submitted,
       approved,
       waitingItIssue,
       readyForCollection,
       clientConfirmed,
       returned,
-      rejected,
     };
   }, [loans]);
 
@@ -227,13 +223,12 @@ export default function DashboardPage() {
           {/* Loan Stats */}
           <div>
             <h2 className="text-xl font-semibold mb-4">Loan Overview</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <StatsCard title="Draft" value={loanStats.draft} icon={FileText} />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <StatsCard title="Submitted" value={loanStats.submitted} icon={Clock} />
               <StatsCard title="Approved" value={loanStats.approved} icon={CheckCircle2} />
               <StatsCard title="Waiting IT Issue" value={loanStats.waitingItIssue} icon={Laptop} />
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
               <StatsCard
                 title="Ready For Collection"
                 value={loanStats.readyForCollection}
@@ -241,7 +236,6 @@ export default function DashboardPage() {
               />
               <StatsCard title="Client Confirmed" value={loanStats.clientConfirmed} icon={Users} />
               <StatsCard title="Returned" value={loanStats.returned} icon={CheckCircle2} />
-              <StatsCard title="Rejected" value={loanStats.rejected} icon={XCircle} />
             </div>
           </div>
 

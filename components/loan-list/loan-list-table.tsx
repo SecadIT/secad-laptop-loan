@@ -217,7 +217,7 @@ export function LoanListTable() {
             className="pl-9"
           />
         </div>
-        <div className="rounded-md border overflow-x-auto">
+        <div className="rounded border overflow-x-auto">
           <Table>
             <TableCaption>List of all laptop loans</TableCaption>
             <TableHeader>
@@ -249,7 +249,9 @@ export function LoanListTable() {
                   >
                     <TableCell className="">{loan.ClientName}</TableCell>
                     <TableCell>
-                      <span className={`text-xs px-2 py-1 rounded font-medium ${getStatusColor(loan.IdentityandStatus?.Value)}`}>
+                      <span
+                        className={`text-xs px-2 py-1 rounded font-medium ${getStatusColor(loan.IdentityandStatus?.Value)}`}
+                      >
                         {loan.IdentityandStatus?.Value || 'N/A'}
                       </span>
                     </TableCell>

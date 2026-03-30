@@ -47,7 +47,7 @@ export function Navigation() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'relative text-sm font-medium transition-all duration-200 px-3 py-2 rounded-md',
+                  'relative text-sm font-medium transition-all duration-200 px-3 py-2 rounded',
                   pathname === item.href
                     ? 'text-foreground '
                     : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
@@ -119,7 +119,7 @@ export function Navigation() {
                 href={item.href}
                 onClick={() => setMobileMenuOpen(false)}
                 className={cn(
-                  'block text-sm font-medium transition-all duration-200 px-3 py-2 rounded-md',
+                  'block text-sm font-medium transition-all duration-200 px-3 py-2 rounded',
                   pathname === item.href
                     ? 'text-foreground bg-accent'
                     : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'

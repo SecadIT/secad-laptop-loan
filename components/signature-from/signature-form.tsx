@@ -256,7 +256,7 @@ export function SignatureForm({ onSuccess }: SignatureFormProps) {
 
         <div className="space-y-2">
           <Label>Signature Date</Label>
-          <div className="p-3 rounded-md bg-muted/50 border border-border">
+          <div className="p-3 rounded bg-muted/50 border border-border">
             <p className="text-sm font-medium">{todayDate}</p>
           </div>
         </div>
@@ -270,7 +270,7 @@ export function SignatureForm({ onSuccess }: SignatureFormProps) {
       {/* Status Message */}
       {status && (
         <div
-          className={`p-4 rounded-md ${
+          className={`p-4 rounded ${
             status.includes('✅')
               ? 'bg-green-50 text-green-800 border border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800'
               : 'bg-red-50 text-red-800 border border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800'

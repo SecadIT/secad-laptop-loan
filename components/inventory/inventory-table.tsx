@@ -204,7 +204,7 @@ export function InventoryTable() {
             className="pl-9"
           />
         </div>
-        <div className="rounded-md border overflow-x-auto">
+        <div className="rounded border overflow-x-auto">
           <Table>
             <TableCaption>List of all assets</TableCaption>
             <TableHeader>
