@@ -68,8 +68,8 @@ export function InventoryTable() {
             return asset.AssetType?.Value === filterValue;
           case 'manufacturer':
             return asset.Manufacturer?.Value === filterValue;
-          case 'color':
-            return asset.Color?.Value === filterValue;
+          case 'program':
+            return asset.OwnerProgram?.Value === filterValue;
           case 'condition':
             return asset.Condition?.Value === filterValue;
           default:
@@ -87,7 +87,7 @@ export function InventoryTable() {
           asset.AssetType?.Value?.toLowerCase().includes(query) ||
           asset.Manufacturer?.Value?.toLowerCase().includes(query) ||
           asset.Status?.Value?.toLowerCase().includes(query) ||
-          asset.Color?.Value?.toLowerCase().includes(query) ||
+          asset.OwnerProgram?.Value?.toLowerCase().includes(query) ||
           asset.Condition?.Value?.toLowerCase().includes(query)
       );
     }
@@ -198,7 +198,7 @@ export function InventoryTable() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             type="text"
-            placeholder="Search by serial number, type, manufacturer, status, or color..."
+            placeholder="Search by serial number, type, manufacturer, status, or program..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-9"
@@ -211,9 +211,10 @@ export function InventoryTable() {
               <TableRow>
                 <TableHead>ID</TableHead>
                 <TableHead>Asset Type</TableHead>
+                <TableHead>Title</TableHead>
                 <TableHead>Manufacturer</TableHead>
                 <TableHead>Serial Number</TableHead>
-                <TableHead>Color</TableHead>
+                <TableHead>Program</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Condition</TableHead>
                 <TableHead>Created</TableHead>
@@ -236,9 +237,10 @@ export function InventoryTable() {
                   >
                     <TableCell className="">{asset.ID}</TableCell>
                     <TableCell>{asset.AssetType?.Value || 'N/A'}</TableCell>
+                    <TableCell>{asset.Title || 'N/A'}</TableCell>
                     <TableCell>{asset.Manufacturer?.Value || 'N/A'}</TableCell>
                     <TableCell>{asset.SerialNumber || 'N/A'}</TableCell>
-                    <TableCell>{asset.Color?.Value || 'N/A'}</TableCell>
+                    <TableCell>{asset.OwnerProgram?.Value || 'N/A'}</TableCell>
                     <TableCell>
                       <span
                         className={`text-xs px-2 py-1 rounded font-medium ${getStatusColor(

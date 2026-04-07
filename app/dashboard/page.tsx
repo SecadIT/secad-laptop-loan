@@ -42,7 +42,7 @@ export default function DashboardPage() {
     const available = assets.filter((a) => a.Status?.Value === 'Available').length;
     const loanedOut = assets.filter((a) => a.Status?.Value === 'Loaned Out').length;
     const inUse = assets.filter((a) => a.Status?.Value === 'In Use').length;
-    const inRepair = assets.filter((a) => a.Status?.Value === 'In Repair').length;
+    const inRepair = assets.filter((a) => a.Status?.Value === 'In Maintainance').length;
     const retired = assets.filter((a) => a.Status?.Value === 'Retired').length;
     const reservedForLoan = assets.filter((a) => a.Status?.Value === 'Reserved For Loan').length;
 
@@ -213,7 +213,7 @@ export default function DashboardPage() {
               <StatsCard title="In Use" value={assetStats.inUse} icon={Monitor} />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              <StatsCard title="In Repair" value={assetStats.inRepair} icon={Wrench} />
+              <StatsCard title="In Maintenance" value={assetStats.inRepair} icon={Wrench} />
               <StatsCard title="Retired" value={assetStats.retired} icon={Archive} />
               <StatsCard
                 title="Reserved For Loan"

@@ -96,63 +96,67 @@ export function LoanFilter({
   const hasActiveFilter = filterField && filterValue;
 
   return (
-    <div className="flex flex-col sm:flex-row gap-4 items-end">
-      {/* Filter Field Selector */}
-      <div className="space-y-2 flex-1 min-w-[200px]">
-        <Label htmlFor="filterField">Filter By</Label>
-        <Select value={filterField} onValueChange={handleFieldChange}>
-          <SelectTrigger id="filterField">
-            <SelectValue placeholder="Select field to filter" />
-          </SelectTrigger>
-          <SelectContent>
-            {FILTER_FIELDS.map((field) => (
-              <SelectItem key={field.value} value={field.value}>
-                {field.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Filter Value Selector - Only shown when field is selected */}
-      {filterField && (
-        <div className="space-y-2 flex-1 min-w-[200px]">
-          <Label htmlFor="filterValue">
-            {FILTER_FIELDS.find((f) => f.value === filterField)?.label || 'Value'}
+    <div className="flex flex-col gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {/* Filter Field Selector */}
+        <div className="space-y-2 w-full">
+          <Label htmlFor="filterField" className="text-xs sm:text-sm">
+            Filter By
           </Label>
-          <Select value={filterValue} onValueChange={handleValueChange}>
-            <SelectTrigger id="filterValue">
-              <SelectValue
-                placeholder={`Select ${FILTER_FIELDS.find((f) => f.value === filterField)?.label.toLowerCase()}`}
-              />
+          <Select value={filterField} onValueChange={handleFieldChange}>
+            <SelectTrigger id="filterField" className="h-9 sm:h-10">
+              <SelectValue placeholder="Select field to filter" />
             </SelectTrigger>
             <SelectContent>
-              {filterOptions.length === 0 ? (
-                <SelectItem value="no-options" disabled>
-                  No options available
+              {FILTER_FIELDS.map((field) => (
+                <SelectItem key={field.value} value={field.value}>
+                  {field.label}
                 </SelectItem>
-              ) : (
-                filterOptions.map((option) => (
-                  <SelectItem key={option} value={option}>
-                    {option}
-                  </SelectItem>
-                ))
-              )}
+              ))}
             </SelectContent>
           </Select>
         </div>
-      )}
+
+        {/* Filter Value Selector - Only shown when field is selected */}
+        {filterField && (
+          <div className="space-y-2 w-full">
+            <Label htmlFor="filterValue" className="text-xs sm:text-sm">
+              {FILTER_FIELDS.find((f) => f.value === filterField)?.label || 'Value'}
+            </Label>
+            <Select value={filterValue} onValueChange={handleValueChange}>
+              <SelectTrigger id="filterValue" className="h-9 sm:h-10">
+                <SelectValue
+                  placeholder={`Select ${FILTER_FIELDS.find((f) => f.value === filterField)?.label.toLowerCase()}`}
+                />
+              </SelectTrigger>
+              <SelectContent>
+                {filterOptions.length === 0 ? (
+                  <SelectItem value="no-options" disabled>
+                    No options available
+                  </SelectItem>
+                ) : (
+                  filterOptions.map((option) => (
+                    <SelectItem key={option} value={option}>
+                      {option}
+                    </SelectItem>
+                  ))
+                )}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
+      </div>
 
       {/* Clear Filter Button */}
       {hasActiveFilter && (
         <Button
-          variant="ghost"
-          size="icon"
+          variant="outline"
+          size="sm"
           onClick={onClearFilter}
-          className="shrink-0"
-          title="Clear filter"
+          className="w-full sm:w-auto self-start"
         >
-          <X className="h-4 w-4" />
+          <X className="h-4 w-4 mr-2" />
+          Clear Filter
         </Button>
       )}
     </div>

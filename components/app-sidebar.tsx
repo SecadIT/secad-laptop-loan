@@ -14,6 +14,7 @@ import {
   User,
   Sun,
   Moon,
+  LayoutDashboard,
 } from 'lucide-react';
 import {
   Sidebar,
@@ -33,6 +34,11 @@ import { Button } from '@/components/ui/button';
 import { useTheme } from 'next-themes';
 
 const navItems = [
+  {
+    name: 'Dashboard',
+    href: '/dashboard',
+    icon: LayoutDashboard,
+  },
   {
     name: 'Request Laptop Loan',
     href: '/request-laptop-loan',

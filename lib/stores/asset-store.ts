@@ -3,6 +3,7 @@ import { fetchApi } from '@/lib/api-client';
 
 export interface AssetRecord {
   ID: number;
+  Title: string;
   ItemInternalId: string;
   Status: {
     Id: number;
@@ -16,10 +17,11 @@ export interface AssetRecord {
     Id: number;
     Value: string;
   };
-  Color: {
+  OwnerProgram: {
     Id: number;
     Value: string;
   };
+  AssetTag?: string;
   SerialNumber: string;
   Condition?: {
     Id: number;

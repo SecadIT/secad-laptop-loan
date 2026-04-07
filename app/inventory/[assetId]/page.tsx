@@ -44,6 +44,7 @@ export default function AssetDetailPage({ params }: AssetDetailPageProps) {
     if (assets.length > 0) {
       const foundAsset = assets.find((a) => a.ID.toString() === resolvedParams.assetId);
       setAsset(foundAsset || null);
+      //console.log('Found asset:', foundAsset);
     }
   }, [assets, resolvedParams.assetId]);
 
@@ -186,10 +187,16 @@ export default function AssetDetailPage({ params }: AssetDetailPageProps) {
                   <p className="text-sm">{asset.Manufacturer?.Value || 'N/A'}</p>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">Color</label>
-                  <p className="text-sm">{asset.Color?.Value || 'N/A'}</p>
+                  <label className="text-sm font-medium text-muted-foreground">Program</label>
+                  <p className="text-sm">{asset.OwnerProgram?.Value || 'N/A'}</p>
                 </div>
-                <div className="md:col-span-2">
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Asset Tag</label>
+                  <p className="text-sm font-mono bg-muted px-2 py-1 rounded inline-block">
+                    {asset.Title || 'N/A'}
+                  </p>
+                </div>
+                <div>
                   <label className="text-sm font-medium text-muted-foreground">Serial Number</label>
                   <p className="text-sm font-mono bg-muted px-2 py-1 rounded inline-block">
                     {asset.SerialNumber || 'N/A'}
