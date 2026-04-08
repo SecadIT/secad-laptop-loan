@@ -66,7 +66,7 @@ export function AssetBrowserDialog({
       return (
         asset.SerialNumber?.toLowerCase().includes(query) ||
         asset.Manufacturer?.Value?.toLowerCase().includes(query) ||
-        asset.Color?.Value?.toLowerCase().includes(query) ||
+        asset.OwnerProgram?.Value?.toLowerCase().includes(query) ||
         asset.Condition?.Value?.toLowerCase().includes(query)
       );
     }
@@ -119,7 +119,7 @@ export function AssetBrowserDialog({
                 <TableRow>
                   <TableHead>Serial Number</TableHead>
                   <TableHead>Manufacturer</TableHead>
-                  <TableHead>Color</TableHead>
+                  <TableHead>Program</TableHead>
                   <TableHead>Condition</TableHead>
                   <TableHead className="text-right">Action</TableHead>
                 </TableRow>
@@ -131,7 +131,7 @@ export function AssetBrowserDialog({
                       {asset.SerialNumber || 'N/A'}
                     </TableCell>
                     <TableCell>{asset.Manufacturer?.Value || 'N/A'}</TableCell>
-                    <TableCell>{asset.Color?.Value || 'N/A'}</TableCell>
+                    <TableCell>{asset.OwnerProgram?.Value || 'N/A'}</TableCell>
                     <TableCell className="text-sm">{asset.Condition?.Value || 'N/A'}</TableCell>
                     <TableCell className="text-right">
                       <Button type="button" size="sm" onClick={() => handleSelectAsset(asset)}>
