@@ -243,7 +243,7 @@ export function InventoryTable() {
                     <TableCell>{asset.OwnerProgram?.Value || 'N/A'}</TableCell>
                     <TableCell>
                       <span
-                        className={`text-xs px-2 py-1 rounded font-medium ${getStatusColor(
+                        className={`text-xs px-2 py-1 rounded-sm font-medium ${getStatusColor(
                           asset.Status?.Value
                         )}`}
                       >

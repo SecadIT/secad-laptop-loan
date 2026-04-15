@@ -250,7 +250,7 @@ export function LoanListTable() {
                     <TableCell className="">{loan.ClientName}</TableCell>
                     <TableCell>
                       <span
-                        className={`text-xs px-2 py-1 rounded font-medium ${getStatusColor(loan.IdentityandStatus?.Value)}`}
+                        className={`text-xs px-2 py-1 rounded-sm font-medium ${getStatusColor(loan.IdentityandStatus?.Value)}`}
                       >
                         {loan.IdentityandStatus?.Value || 'N/A'}
                       </span>

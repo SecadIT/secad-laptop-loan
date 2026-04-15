@@ -160,7 +160,7 @@ export default function AssetDetailPage({ params }: AssetDetailPageProps) {
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">Status</label>
                   <span
-                    className={`inline-block text-xs px-2 py-1 rounded ${
+                    className={`inline-block text-xs px-2 py-1 rounded-sm ${
                       asset.Status?.Value === 'Available'
                         ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
                         : 'bg-muted'
@@ -192,13 +192,13 @@ export default function AssetDetailPage({ params }: AssetDetailPageProps) {
                 </div>
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">Asset Tag</label>
-                  <p className="text-sm font-mono bg-muted px-2 py-1 rounded inline-block">
+                  <p className="text-sm font-mono bg-muted px-2 py-1 rounded-sm inline-block">
                     {asset.Title || 'N/A'}
                   </p>
                 </div>
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">Serial Number</label>
-                  <p className="text-sm font-mono bg-muted px-2 py-1 rounded inline-block">
+                  <p className="text-sm font-mono bg-muted px-2 py-1 rounded-sm inline-block">
                     {asset.SerialNumber || 'N/A'}
                   </p>
                 </div>
