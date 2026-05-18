@@ -1,7 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 // Store OTPs temporarily (in production, use Redis or database)
-const otpStore = new Map<string, { otp: string; expires: number }>();
+// Use global to persist across hot reloads in development
+const globalForOtp = global as unknown as {
+  otpStore: Map<string, { otp: string; expires: number }> | undefined;
+};
+
+const otpStore = globalForOtp.otpStore ?? new Map<string, { otp: string; expires: number }>();
+globalForOtp.otpStore = otpStore;
 
 export async function POST(request: NextRequest) {
   try {
@@ -69,6 +75,3 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Failed to send OTP' }, { status: 500 });
   }
 }
-
-// Export the OTP store for verification
-export { otpStore };

@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { SignJWT } from 'jose';
-import { otpStore } from '../send-otp/route';
+
+// Access the global OTP store (same instance as send-otp)
+const globalForOtp = global as unknown as {
+  otpStore: Map<string, { otp: string; expires: number }> | undefined;
+};
+
+const otpStore = globalForOtp.otpStore ?? new Map<string, { otp: string; expires: number }>();
+globalForOtp.otpStore = otpStore;
 
 const JWT_SECRET = new TextEncoder().encode(
   process.env.JWT_SECRET || 'your-secret-key-change-in-production'
