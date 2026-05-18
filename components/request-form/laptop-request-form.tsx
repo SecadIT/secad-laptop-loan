@@ -166,26 +166,25 @@ export function LaptopRequestForm({ onSuccess }: LaptopRequestFormProps) {
           {!showCustomDO ? (
             <div>
               <div className="space-y-2 gap-2  flex items-center justify-center">
-              <div className="flex-1 items-center justify-between p-2 border rounded-md bg-muted/50">
-                <span className="text-sm">
-                  <span className="font-medium">{user?.email || 'Loading...'}</span>
-                </span>
+                <div className="flex-1 items-center justify-between p-2 border rounded-md bg-muted/50">
+                  <span className="text-sm">
+                    <span className="font-medium">{user?.email || 'Loading...'}</span>
+                  </span>
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setShowCustomDO(true)}
+                  className="full"
+                >
+                  Select Different Officer
+                </Button>
               </div>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setShowCustomDO(true)}
-                className="full"
-              >
-                Select Different Officer
-              </Button>
-              
-            </div>
-            <span className="text-xs text-muted-foreground">
-                If you want to submit on behalf of someone else, click the button to select a different development officer.
+              <span className="text-xs text-muted-foreground">
+                If you want to submit on behalf of someone else, click the button to select a
+                different development officer.
               </span>
-              </div>
-            
+            </div>
           ) : (
             <div className="space-y-2 flex gap-2">
               <Select value={selectedDO} onValueChange={(value) => setSelectedDO(value || '')}>
