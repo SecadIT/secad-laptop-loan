@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useStaffStore } from '@/lib/stores/staff-store';
+import { useSession } from '@/lib/hooks/use-session';
 
 interface LaptopRequestFormProps {
   onSuccess?: () => void;
@@ -30,7 +31,9 @@ export function LaptopRequestForm({ onSuccess }: LaptopRequestFormProps) {
   const [selectedApprover, setSelectedApprover] = useState<string>('');
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [selectedDO, setSelectedDO] = useState<string>('');
+  const [showCustomDO, setShowCustomDO] = useState(false);
 
+  const { user } = useSession();
   const { staff, loading: staffLoading, fetchStaff, getStaffByRole } = useStaffStore();
 
   // Fetch staff on component mount
@@ -57,8 +60,15 @@ export function LaptopRequestForm({ onSuccess }: LaptopRequestFormProps) {
     }
 
     // Validate select fields
-    if (!selectedProgram || !selectedApprover || !selectedDO) {
-      setStatus('❌ Please select program, development officer, and approver');
+    if (!selectedProgram || !selectedApprover) {
+      setStatus('❌ Please select program and approver');
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Validate DO selection if custom DO is enabled
+    if (showCustomDO && !selectedDO) {
+      setStatus('❌ Please select a development officer');
       setIsSubmitting(false);
       return;
     }
@@ -70,17 +80,36 @@ export function LaptopRequestForm({ onSuccess }: LaptopRequestFormProps) {
       return;
     }
 
-    // Get selected DO details
-    const doDetails = staff.find((s) => s.User.Email === selectedDO);
-    if (!doDetails) {
-      setStatus('❌ Development officer not found');
-      setIsSubmitting(false);
-      return;
+    // Determine DO details - use current user or selected DO
+    let doEmail: string;
+    let doName: string;
+
+    if (showCustomDO) {
+      // Get selected DO details
+      const doDetails = staff.find((s) => s.User.Email === selectedDO);
+      if (!doDetails) {
+        setStatus('❌ Development officer not found');
+        setIsSubmitting(false);
+        return;
+      }
+      doEmail = doDetails.User.Email;
+      doName = doDetails.User.DisplayName;
+    } else {
+      // Use current user as DO
+      if (!user?.email) {
+        setStatus('❌ User session not found');
+        setIsSubmitting(false);
+        return;
+      }
+      doEmail = user.email;
+      // Try to find user in staff list for display name
+      const currentUserDetails = staff.find((s) => s.User.Email === user.email);
+      doName = currentUserDetails?.User.DisplayName || user.email;
     }
 
     const submitData = {
-      developmentOfficerEmail: doDetails.User.Email,
-      developmentOfficerName: doDetails.User.DisplayName,
+      developmentOfficerEmail: doEmail,
+      developmentOfficerName: doName,
       clientName: String(formData.get('clientName') ?? ''),
       clientEmail: String(formData.get('clientEmail') ?? ''),
       clientAddress: String(formData.get('clientAddress') ?? ''),
@@ -111,6 +140,7 @@ export function LaptopRequestForm({ onSuccess }: LaptopRequestFormProps) {
         setSelectedProgram('');
         setSelectedApprover('');
         setSelectedDO('');
+        setShowCustomDO(false);
         setAcceptedTerms(false);
         onSuccess?.();
       } else {
@@ -131,32 +161,70 @@ export function LaptopRequestForm({ onSuccess }: LaptopRequestFormProps) {
       <div className="space-y-4">
         <h3 className="text-lg font-semibold">Development Officer Information</h3>
 
-        <div className="space-y-2">
-          <Label className="text-muted-foreground">Development Officer</Label>
-          <Select value={selectedDO} onValueChange={(value) => setSelectedDO(value || '')}>
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select development officer" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                {staffLoading ? (
-                  <SelectItem value="loading" disabled>
-                    Loading staff...
-                  </SelectItem>
-                ) : developmentOfficers.length === 0 ? (
-                  <SelectItem value="none" disabled>
-                    No development officers found
-                  </SelectItem>
-                ) : (
-                  developmentOfficers.map((officer) => (
-                    <SelectItem key={officer.ID} value={officer.User.Email}>
-                      {officer.User.DisplayName} ({officer.User.Email})
-                    </SelectItem>
-                  ))
-                )}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+        <div className="space-y-2 ">
+          <Label className="text-muted-foreground">Requester</Label>
+          {!showCustomDO ? (
+            <div>
+              <div className="space-y-2 gap-2  flex items-center justify-center">
+              <div className="flex-1 items-center justify-between p-2 border rounded-md bg-muted/50">
+                <span className="text-sm">
+                  <span className="font-medium">{user?.email || 'Loading...'}</span>
+                </span>
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setShowCustomDO(true)}
+                className="full"
+              >
+                Select Different Officer
+              </Button>
+              
+            </div>
+            <span className="text-xs text-muted-foreground">
+                If you want to submit on behalf of someone else, click the button to select a different development officer.
+              </span>
+              </div>
+            
+          ) : (
+            <div className="space-y-2 flex gap-2">
+              <Select value={selectedDO} onValueChange={(value) => setSelectedDO(value || '')}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select development officer" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {staffLoading ? (
+                      <SelectItem value="loading" disabled>
+                        Loading staff...
+                      </SelectItem>
+                    ) : developmentOfficers.length === 0 ? (
+                      <SelectItem value="none" disabled>
+                        No development officers found
+                      </SelectItem>
+                    ) : (
+                      developmentOfficers.map((officer) => (
+                        <SelectItem key={officer.ID} value={officer.User.Email}>
+                          {officer.User.DisplayName} ({officer.User.Email})
+                        </SelectItem>
+                      ))
+                    )}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setShowCustomDO(false);
+                  setSelectedDO('');
+                }}
+                className=""
+              >
+                Use My Account
+              </Button>
+            </div>
+          )}
         </div>
       </div>
 

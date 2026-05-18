@@ -46,6 +46,7 @@ export async function POST(request: NextRequest) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'x-pa-api-key': process.env.PA_API_KEY || '',
       },
       body: JSON.stringify({
         email: email.toLowerCase(),
