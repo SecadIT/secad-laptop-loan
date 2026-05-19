@@ -165,7 +165,7 @@ export function LaptopRequestForm({ onSuccess }: LaptopRequestFormProps) {
           <Label className="text-muted-foreground">Requester</Label>
           {!showCustomDO ? (
             <div>
-              <div className="space-y-2 gap-2  flex items-center justify-center">
+              <div className="gap-2  flex justify-center ">
                 <div className="flex-1 items-center justify-between p-2 border rounded-md bg-muted/50">
                   <span className="text-sm">
                     <span className="font-medium">{user?.email || 'Loading...'}</span>
@@ -173,9 +173,9 @@ export function LaptopRequestForm({ onSuccess }: LaptopRequestFormProps) {
                 </div>
                 <Button
                   type="button"
-                  variant="outline"
+                  variant="ghost"
                   onClick={() => setShowCustomDO(true)}
-                  className="full"
+                  className="h-10"
                 >
                   Select Different Officer
                 </Button>
@@ -213,7 +213,7 @@ export function LaptopRequestForm({ onSuccess }: LaptopRequestFormProps) {
               </Select>
               <Button
                 type="button"
-                variant="outline"
+                variant="ghost"
                 onClick={() => {
                   setShowCustomDO(false);
                   setSelectedDO('');

@@ -155,7 +155,7 @@ export function SignatureForm({ onSuccess }: SignatureFormProps) {
     <form className="space-y-6" onSubmit={handleSubmit}>
       {/* Loan ID Section */}
       <div className="space-y-2">
-        <Label htmlFor="loanId">Loan ID</Label>
+        {/* <Label htmlFor="loanId">Loan ID</Label>
         <Input
           id="loanId"
           name="loanId"
@@ -164,108 +164,112 @@ export function SignatureForm({ onSuccess }: SignatureFormProps) {
           value={loanId}
           onChange={(e) => setLoanId(e.target.value)}
           required
-        />
+        /> */}
         <LoanBrowserDialog onSelectLoan={setLoanId} statusFilter="Ready For Collection" />
       </div>
 
       {/* Confirmation of Receipt Section */}
-      <div className="space-y-4  pt-4">
-        <h3 className="text-lg font-semibold">Confirm Receipt of Equipment</h3>
+      {loanId && (
+        <>
+          <div className="space-y-4  pt-4">
+            <h3 className="text-lg font-semibold">Confirm Receipt of Equipment</h3>
 
-        <div className="flex items-start space-x-3">
-          <Checkbox
-            id="confirmReceipt"
-            checked={confirmReceipt}
-            onCheckedChange={(checked) => setConfirmReceipt(checked === true)}
-          />
-          <div className="grid gap-1.5 leading-none">
-            <Label
-              htmlFor="confirmReceipt"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              I Confirm receipt of equipment
-            </Label>
+            <div className="flex items-start space-x-3">
+              <Checkbox
+                id="confirmReceipt"
+                checked={confirmReceipt}
+                onCheckedChange={(checked) => setConfirmReceipt(checked === true)}
+              />
+              <div className="grid gap-1.5 leading-none">
+                <Label
+                  htmlFor="confirmReceipt"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  I Confirm receipt of equipment
+                </Label>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
 
-      {/* Client Agreement Section */}
-      <div className="space-y-4  pt-4">
-        <h3 className="text-lg font-semibold">
-          Client Agreement - Request for Loan of Equipment by Learner/Client
-        </h3>
+          {/* Client Agreement Section */}
+          <div className="space-y-4  pt-4">
+            <h3 className="text-lg font-semibold">
+              Client Agreement - Request for Loan of Equipment by Learner/Client
+            </h3>
 
-        <div className="flex items-start space-x-3">
-          <Checkbox
-            id="agreeTerms"
-            checked={agreeTerms}
-            onCheckedChange={(checked) => setAgreeTerms(checked === true)}
-          />
-          <div className="grid gap-1.5 leading-none">
-            <Label
-              htmlFor="agreeTerms"
-              className="text-sm font-normal leading-relaxed peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              I hereby agree and certify the terms, conditions and responsibilities when borrowing
-              ICT equipment. I assume all risks of loss or damage and commit to returning equipment
-              on or before agreed return date.
-            </Label>
+            <div className="flex items-start space-x-3">
+              <Checkbox
+                id="agreeTerms"
+                checked={agreeTerms}
+                onCheckedChange={(checked) => setAgreeTerms(checked === true)}
+              />
+              <div className="grid gap-1.5 leading-none">
+                <Label
+                  htmlFor="agreeTerms"
+                  className="text-sm font-normal leading-relaxed peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  I hereby agree and certify the terms, conditions and responsibilities when
+                  borrowing ICT equipment. I assume all risks of loss or damage and commit to
+                  returning equipment on or before agreed return date.
+                </Label>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
 
-      {/* Signature Section */}
-      <div className="space-y-4  pt-4">
-        <h3 className="text-lg font-semibold">Signature</h3>
+          {/* Signature Section */}
+          <div className="space-y-4  pt-4">
+            <h3 className="text-lg font-semibold">Signature</h3>
 
-        <div className="space-y-2">
-          <Label htmlFor="printedName">Print Your Name</Label>
-          <Input
-            id="printedName"
-            name="printedName"
-            type="text"
-            placeholder="Enter your full name"
-            required
-          />
-        </div>
+            <div className="space-y-2">
+              <Label htmlFor="printedName">Print Your Name</Label>
+              <Input
+                id="printedName"
+                name="printedName"
+                type="text"
+                placeholder="Enter your full name"
+                required
+              />
+            </div>
 
-        {/* Signature Canvas Component */}
-        <SignatureCanvas
-          value={signatureData}
-          onChange={setSignatureData}
-          label="Draw Your Signature (Test)"
-          height={200}
-          showClearButton={true}
-        />
+            {/* Signature Canvas Component */}
+            <SignatureCanvas
+              value={signatureData}
+              onChange={setSignatureData}
+              label="Draw Your Signature (Test)"
+              height={200}
+              showClearButton={true}
+            />
 
-        <div className="flex items-start space-x-3">
-          <Checkbox
-            id="agreeSignature"
-            checked={agreeSignature}
-            onCheckedChange={(checked) => setAgreeSignature(checked === true)}
-          />
-          <div className="grid gap-1.5 leading-none">
-            <Label
-              htmlFor="agreeSignature"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              I agree that my typed name serves as my electronic signature
-            </Label>
+            <div className="flex items-start space-x-3">
+              <Checkbox
+                id="agreeSignature"
+                checked={agreeSignature}
+                onCheckedChange={(checked) => setAgreeSignature(checked === true)}
+              />
+              <div className="grid gap-1.5 leading-none">
+                <Label
+                  htmlFor="agreeSignature"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  I agree that my typed name serves as my electronic signature
+                </Label>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Signature Date</Label>
+              <div className="p-3 rounded-sm bg-muted/50 border border-border">
+                <p className="text-sm font-medium">{todayDate}</p>
+              </div>
+            </div>
           </div>
-        </div>
 
-        <div className="space-y-2">
-          <Label>Signature Date</Label>
-          <div className="p-3 rounded-sm bg-muted/50 border border-border">
-            <p className="text-sm font-medium">{todayDate}</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Submit Button */}
-      <Button type="submit" disabled={isSubmitting} className="w-full">
-        {isSubmitting ? 'Submitting...' : 'Submit'}
-      </Button>
+          {/* Submit Button */}
+          <Button type="submit" disabled={isSubmitting} className="w-full">
+            {isSubmitting ? 'Submitting...' : 'Submit'}
+          </Button>
+        </>
+      )}
 
       {/* Status Message */}
       {status && (

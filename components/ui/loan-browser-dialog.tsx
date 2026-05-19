@@ -64,7 +64,7 @@ export function LoanBrowserDialog({ onSelectLoan, statusFilter }: LoanBrowserDia
       <DialogTrigger
         render={<Button type="button" variant="link" className="h-auto p-0 text-sm" />}
       >
-        Browse loans
+        Click here to start signing
       </DialogTrigger>
       <DialogContent className="max-w-6xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
