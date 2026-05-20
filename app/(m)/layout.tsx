@@ -12,7 +12,13 @@ import { AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 // Routes that require IT or FOH role
-const RESTRICTED_ROUTES = ['/inventory', '/issue-laptop', '/loan-list', '/return-laptop'];
+const RESTRICTED_ROUTES = [
+  '/inventory',
+  '/issue-laptop',
+  '/loan-list',
+  '/return-laptop',
+  '/clients',
+];
 
 // Allowed roles for restricted routes
 const ALLOWED_ROLES = ['IT', 'FOH'];

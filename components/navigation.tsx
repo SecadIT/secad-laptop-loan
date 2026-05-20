@@ -19,13 +19,18 @@ import {
   DropdownMenuGroup,
 } from '@/components/ui/dropdown-menu';
 
-const navItems = [
-  { name: 'Dashboard', href: '/dashboard' },
-  { name: 'Request Laptop Loan', href: '/request-laptop-loan' },
-  { name: 'Issue Laptop', href: '/issue-laptop' },
-  { name: 'Request Signature', href: '/request-signature' },
-  { name: 'Return Laptop', href: '/return-laptop' },
-  { name: 'Loan List', href: '/loan-list' },
+const overviewItems = [{ name: 'Dashboard', href: '/dashboard' }];
+
+const manageItems = [
+  { name: 'Request', href: '/request-laptop-loan' },
+  { name: 'Issue', href: '/issue-laptop' },
+  { name: 'Signature', href: '/request-signature' },
+  { name: 'Return', href: '/return-laptop' },
+];
+
+const listItems = [
+  { name: 'Loans', href: '/loan-list' },
+  { name: 'Clients', href: '/clients' },
   { name: 'Inventory', href: '/inventory' },
 ];
 
@@ -41,8 +46,51 @@ export function Navigation() {
         <div className="flex justify-between items-center">
           <BrandingLogo />
           {/* Desktop Menu */}
-          <div className="hidden md:flex gap-4">
-            {navItems.map((item) => (
+          <div className="hidden md:flex gap-1 items-center">
+            {/* Overview */}
+            {overviewItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  'relative text-sm font-medium transition-all duration-200 px-3 py-2 rounded',
+                  pathname === item.href
+                    ? 'text-foreground '
+                    : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
+                )}
+              >
+                {item.name}
+                {pathname === item.href && (
+                  <span className="absolute -bottom-4 left-0 right-0 h-0.5 bg-primary" />
+                )}
+              </Link>
+            ))}
+
+            <div className="w-px h-6 bg-border mx-1" />
+
+            {/* Manage */}
+            {manageItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  'relative text-sm font-medium transition-all duration-200 px-3 py-2 rounded',
+                  pathname === item.href
+                    ? 'text-foreground '
+                    : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
+                )}
+              >
+                {item.name}
+                {pathname === item.href && (
+                  <span className="absolute -bottom-4 left-0 right-0 h-0.5 bg-primary" />
+                )}
+              </Link>
+            ))}
+
+            <div className="w-px h-6 bg-border mx-1" />
+
+            {/* Lists */}
+            {listItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
@@ -112,22 +160,73 @@ export function Navigation() {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden mt-4 pb-4 space-y-2 border-t pt-4">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className={cn(
-                  'block text-sm font-medium transition-all duration-200 px-3 py-2 rounded',
-                  pathname === item.href
-                    ? 'text-foreground bg-accent'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
-                )}
-              >
-                {item.name}
-              </Link>
-            ))}
+          <div className="md:hidden mt-4 pb-4 space-y-4 border-t pt-4">
+            {/* Overview Section */}
+            <div className="space-y-1">
+              <div className="px-3 py-1 text-xs font-semibold text-muted-foreground uppercase">
+                Overview
+              </div>
+              {overviewItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={cn(
+                    'block text-sm font-medium transition-all duration-200 px-3 py-2 rounded',
+                    pathname === item.href
+                      ? 'text-foreground bg-accent'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
+                  )}
+                >
+                  {item.name}
+                </Link>
+              ))}
+            </div>
+
+            {/* Manage Section */}
+            <div className="space-y-1">
+              <div className="px-3 py-1 text-xs font-semibold text-muted-foreground uppercase">
+                Manage
+              </div>
+              {manageItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={cn(
+                    'block text-sm font-medium transition-all duration-200 px-3 py-2 rounded',
+                    pathname === item.href
+                      ? 'text-foreground bg-accent'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
+                  )}
+                >
+                  {item.name}
+                </Link>
+              ))}
+            </div>
+
+            {/* Lists Section */}
+            <div className="space-y-1">
+              <div className="px-3 py-1 text-xs font-semibold text-muted-foreground uppercase">
+                Lists
+              </div>
+              {listItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={cn(
+                    'block text-sm font-medium transition-all duration-200 px-3 py-2 rounded',
+                    pathname === item.href
+                      ? 'text-foreground bg-accent'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
+                  )}
+                >
+                  {item.name}
+                </Link>
+              ))}
+            </div>
+
             {user && (
               <>
                 <div className="border-t pt-2 mt-2">

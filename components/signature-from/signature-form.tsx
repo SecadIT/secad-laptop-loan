@@ -155,7 +155,7 @@ export function SignatureForm({ onSuccess }: SignatureFormProps) {
     <form className="space-y-6" onSubmit={handleSubmit}>
       {/* Loan ID Section */}
       <div className="space-y-2">
-        {/* <Label htmlFor="loanId">Loan ID</Label>
+        <Label htmlFor="loanId">Loan ID: {loanId ? loanId : ''}</Label>
         <Input
           id="loanId"
           name="loanId"
@@ -164,7 +164,8 @@ export function SignatureForm({ onSuccess }: SignatureFormProps) {
           value={loanId}
           onChange={(e) => setLoanId(e.target.value)}
           required
-        /> */}
+          hidden
+        />
         <LoanBrowserDialog onSelectLoan={setLoanId} statusFilter="Ready For Collection" />
       </div>
 

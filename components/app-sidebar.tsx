@@ -15,6 +15,7 @@ import {
   Sun,
   Moon,
   LayoutDashboard,
+  Users,
 } from 'lucide-react';
 import {
   Sidebar,
@@ -33,21 +34,28 @@ import { useSession } from '@/lib/hooks/use-session';
 import { Button } from '@/components/ui/button';
 import { useTheme } from 'next-themes';
 
-const navItems = [
+const overviewItems = [
   {
     name: 'Dashboard',
     href: '/dashboard',
     icon: LayoutDashboard,
   },
+];
+
+const manageItems = [
   {
     name: 'Request Laptop',
     href: '/request-laptop-loan',
     icon: ClipboardList,
   },
-  { name: 'Issue Laptop', href: '/issue-laptop', icon: Laptop },
   { name: 'Client Signature', href: '/request-signature', icon: FileSignature },
+  { name: 'Issue Laptop', href: '/issue-laptop', icon: Laptop },
   { name: 'Return Laptop', href: '/return-laptop', icon: RotateCcw },
+];
+
+const listItems = [
   { name: 'Loan List', href: '/loan-list', icon: ListChecks },
+  { name: 'Clients', href: '/clients', icon: Users },
   { name: 'Inventory', href: '/inventory', icon: Package },
 ];
 
@@ -75,11 +83,62 @@ export function AppSidebar() {
       </SidebarHeader>
 
       <SidebarContent>
+        {/* Overview Section */}
         <SidebarGroup>
-          <SidebarGroupLabel>Laptop Management</SidebarGroupLabel>
-          <SidebarGroupContent className="mt-4">
-            <SidebarMenu className="space-y-4">
-              {navItems.map((item) => {
+          <SidebarGroupLabel className="text-blue-700 dark:text-blue-500">
+            Overview
+          </SidebarGroupLabel>
+          <SidebarGroupContent className="mt-2">
+            <SidebarMenu className="space-y-2">
+              {overviewItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = pathname === item.href;
+                return (
+                  <SidebarMenuItem key={item.href}>
+                    <SidebarMenuButton
+                      render={(props) => <Link href={item.href} {...props} />}
+                      isActive={isActive}
+                    >
+                      <Icon className="text-accent-blue" />
+                      <span>{item.name}</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* Manage Section */}
+        <SidebarGroup>
+          <SidebarGroupLabel className="text-blue-700 dark:text-blue-500">Manage</SidebarGroupLabel>
+          <SidebarGroupContent className="mt-2">
+            <SidebarMenu className="space-y-2">
+              {manageItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = pathname === item.href;
+                return (
+                  <SidebarMenuItem key={item.href}>
+                    <SidebarMenuButton
+                      render={(props) => <Link href={item.href} {...props} />}
+                      isActive={isActive}
+                    >
+                      <Icon className="text-accent-blue" />
+                      <span>{item.name}</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* Lists Section */}
+        <SidebarGroup>
+          <SidebarGroupLabel className="text-blue-700 dark:text-blue-500">Lists</SidebarGroupLabel>
+          <SidebarGroupContent className="mt-2">
+            <SidebarMenu className="space-y-2">
+              {listItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = pathname === item.href;
                 return (

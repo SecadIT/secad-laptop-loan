@@ -3,8 +3,8 @@ import { useState, useEffect } from 'react';
 import { fetchApi } from '@/lib/api-client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Select,
   SelectContent,
@@ -23,6 +23,8 @@ interface IssueLaptopFormProps {
   onSuccess?: () => void;
 }
 
+const ITEMS_CHECKLIST = ['Charger', 'Power Cable', 'Laptop Bag', 'Mouse', 'Other Accessories'];
+
 export function IssueLaptopForm({ onSuccess }: IssueLaptopFormProps) {
   const [status, setStatus] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -31,6 +33,9 @@ export function IssueLaptopForm({ onSuccess }: IssueLaptopFormProps) {
   const [loanId, setLoanId] = useState<string>('');
   const [makeAndModel, setMakeAndModel] = useState<string>('');
   const [serialNumber, setSerialNumber] = useState<string>('');
+  const [itemsIncluded, setItemsIncluded] = useState<Record<string, string>>({
+    Laptop: '', // Laptop is always included by default
+  });
 
   const { staff, loading: staffLoading, fetchStaff, getStaffByRole } = useStaffStore();
   const { fetchLoans: refreshLoans } = useLoanStore();
@@ -43,6 +48,32 @@ export function IssueLaptopForm({ onSuccess }: IssueLaptopFormProps) {
   // Get staff by role
   const developmentOfficers = getStaffByRole('DO');
   const itStaff = getStaffByRole('IT');
+
+  const handleItemToggle = (item: string, checked: boolean) => {
+    setItemsIncluded((prev) => {
+      const newItems = { ...prev };
+      if (checked) {
+        newItems[item] = ''; // Add item with empty tag
+      } else {
+        delete newItems[item]; // Remove item
+      }
+      return newItems;
+    });
+  };
+
+  const handleTagChange = (item: string, tag: string) => {
+    setItemsIncluded((prev) => ({
+      ...prev,
+      [item]: tag,
+    }));
+  };
+
+  // Format items included for submission
+  const formatItemsIncluded = (): string => {
+    return Object.entries(itemsIncluded)
+      .map(([item, tag]) => (tag ? `${item} (${tag})` : item))
+      .join(', ');
+  };
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -102,7 +133,7 @@ export function IssueLaptopForm({ onSuccess }: IssueLaptopFormProps) {
         loanId,
         makeAndModelOfDevice: String(formData.get('makeAndModelOfDevice') ?? ''),
         serialNumber: String(formData.get('serialNumber') ?? ''),
-        itemsIncluded: String(formData.get('itemsIncluded') ?? ''),
+        itemsIncluded: formatItemsIncluded(),
         nameDOCollectingEquipment: doDetails.User.DisplayName,
         nameSecadITAssistant: itDetails.User.DisplayName,
       };
@@ -150,6 +181,7 @@ export function IssueLaptopForm({ onSuccess }: IssueLaptopFormProps) {
         setLoanId('');
         setMakeAndModel('');
         setSerialNumber('');
+        setItemsIncluded({ Laptop: '' }); // Reset to default
 
         // Invalidate loan cache to ensure fresh data on next browse
         refreshLoans(true);
@@ -226,15 +258,45 @@ export function IssueLaptopForm({ onSuccess }: IssueLaptopFormProps) {
           </div>
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="itemsIncluded">Items Included</Label>
-          <Textarea
-            id="itemsIncluded"
-            name="itemsIncluded"
-            placeholder="List all items included (e.g., charger, laptop bag, mouse)"
-            required
-            rows={4}
-          />
+        <div className="space-y-3">
+          <Label>
+            Items Included <span className="text-red-500">*</span>
+          </Label>
+          <div className="space-y-3 border rounded-sm p-4">
+            {ITEMS_CHECKLIST.map((item) => (
+              <div key={item} className="space-y-2">
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id={`item-${item}`}
+                    checked={item in itemsIncluded}
+                    onCheckedChange={(checked) => handleItemToggle(item, checked as boolean)}
+                    disabled={isSubmitting || item === 'Laptop'}
+                  />
+                  <Label
+                    htmlFor={`item-${item}`}
+                    className="text-sm font-normal cursor-pointer flex-1"
+                  >
+                    {item}
+                    {item === 'Laptop' && (
+                      <span className="text-muted-foreground ml-1">(Required)</span>
+                    )}
+                  </Label>
+                </div>
+                {item in itemsIncluded && (
+                  <div className="ml-6">
+                    <Input
+                      id={`tag-${item}`}
+                      placeholder={`Enter ${item.toLowerCase()} tag/ID`}
+                      value={itemsIncluded[item]}
+                      onChange={(e) => handleTagChange(item, e.target.value)}
+                      disabled={isSubmitting}
+                      className="text-sm"
+                    />
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
