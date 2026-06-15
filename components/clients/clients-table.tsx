@@ -42,6 +42,13 @@ export function ClientsTable() {
   const loading = loansLoading || assetsLoading;
   const error = loansError || assetsError;
 
+  // Base filter: only show clients with 'Returned' or 'Client Confirmed' status
+  const baseFilteredClients = useMemo(() => {
+    return clients.filter(
+      (client) => client.loanStatus === 'Returned' || client.loanStatus === 'Client Confirmed'
+    );
+  }, [clients]);
+
   const getLoanStatusColor = (status: string | undefined) => {
     switch (status) {
       case 'Draft':
@@ -100,7 +107,7 @@ export function ClientsTable() {
     const loanStatuses = new Set<string>();
     const assetStatuses = new Set<string>();
 
-    clients.forEach((client) => {
+    baseFilteredClients.forEach((client) => {
       if (client.program) programs.add(client.program);
       if (client.loanStatus) loanStatuses.add(client.loanStatus);
       if (client.assetStatus) assetStatuses.add(client.assetStatus);
@@ -111,11 +118,11 @@ export function ClientsTable() {
       loanStatuses: Array.from(loanStatuses).sort(),
       assetStatuses: Array.from(assetStatuses).sort(),
     };
-  }, [clients]);
+  }, [baseFilteredClients]);
 
   // Filter clients based on search query and filter
   const filteredClients = useMemo(() => {
-    let filtered = clients;
+    let filtered = baseFilteredClients;
 
     // Apply field filter first
     if (filterField && filterValue) {
@@ -149,7 +156,7 @@ export function ClientsTable() {
     }
 
     return filtered;
-  }, [clients, searchQuery, filterField, filterValue]);
+  }, [baseFilteredClients, searchQuery, filterField, filterValue]);
 
   // Paginate filtered clients
   const paginatedClients = useMemo(() => {
@@ -237,8 +244,10 @@ export function ClientsTable() {
           <div>
             <CardTitle>Clients</CardTitle>
             <CardDescription>
-              {clients.length} {clients.length === 1 ? 'client' : 'clients'} total
-              {filteredClients.length !== clients.length && ` • ${filteredClients.length} filtered`}
+              {baseFilteredClients.length} {baseFilteredClients.length === 1 ? 'client' : 'clients'}{' '}
+              with returned or confirmed status
+              {filteredClients.length !== baseFilteredClients.length &&
+                ` • ${filteredClients.length} filtered`}
             </CardDescription>
           </div>
           <Button

@@ -33,6 +33,9 @@ import { BrandingLogo } from './branding/logo';
 import { useSession } from '@/lib/hooks/use-session';
 import { Button } from '@/components/ui/button';
 import { useTheme } from 'next-themes';
+import { useStaffStore } from '@/lib/stores/staff-store';
+import { useAssetStore } from '@/lib/stores/asset-store';
+import { useLoanStore } from '@/lib/stores/loan-store';
 
 const overviewItems = [
   {
@@ -65,6 +68,9 @@ export function AppSidebar() {
   const { theme, setTheme, resolvedTheme } = useTheme();
 
   const handleLogout = async () => {
+    useLoanStore.getState().reset();
+    useAssetStore.getState().reset();
+    useStaffStore.getState().reset();
     await logout();
   };
 

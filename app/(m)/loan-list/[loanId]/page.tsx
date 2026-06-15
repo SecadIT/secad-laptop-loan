@@ -216,7 +216,10 @@ export default function LoanDetailPage({ params }: LoanDetailPageProps) {
             <div className="flex gap-4 pt-4 border-t">
               <Button variant="outline">Edit Loan</Button>
               <Button variant="destructive">Delete Loan</Button>
-              <DownloadLoanPdf loan={loan} variant="default" />
+              {(loan.IdentityandStatus?.Value === 'Returned' ||
+                loan.IdentityandStatus?.Value === 'Client Confirmed') && (
+                <DownloadLoanPdf loan={loan} variant="default" />
+              )}
             </div>
           </CardContent>
         </Card>

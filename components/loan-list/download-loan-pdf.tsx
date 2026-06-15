@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Download } from 'lucide-react';
+import { Download, Printer } from 'lucide-react';
 import type { LoanRecord } from '@/lib/stores/loan-store';
 
 interface DownloadLoanPdfProps {
@@ -294,8 +294,8 @@ export function DownloadLoanPdf({ loan, variant = 'default', className }: Downlo
 
   return (
     <Button variant={variant} onClick={downloadPdf} className={className}>
-      <Download className="mr-2 h-4 w-4" />
-      Download PDF
+      <Printer className="mr-2 h-4 w-4" />
+      Print PDF
     </Button>
   );
 }

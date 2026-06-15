@@ -270,6 +270,14 @@ export function LaptopRequestForm({ onSuccess }: LaptopRequestFormProps) {
             required
             rows={3}
           />
+          {/* Example warning component */}
+          <Label htmlFor="additionalNotes">
+            <span className="text-xs text-muted-foreground block mt-1">
+              {' '}
+              ⚠️ Do not enter medical, disciplinary, or sensitive personal information. Focus on
+              operational details only.{' '}
+            </span>
+          </Label>
         </div>
       </div>
 
@@ -418,6 +426,14 @@ export function LaptopRequestForm({ onSuccess }: LaptopRequestFormProps) {
           placeholder="Enter any additional notes or comments"
           rows={4}
         />
+        {/* Example warning component */}
+        <Label htmlFor="additionalNotes">
+          <span className="text-xs text-muted-foreground block mt-1">
+            {' '}
+            ⚠️ Do not enter medical, disciplinary, or sensitive personal information. Focus on
+            operational details only.{' '}
+          </span>
+        </Label>
       </div>
 
       {/* Terms and Conditions */}

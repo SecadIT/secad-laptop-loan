@@ -97,11 +97,8 @@ export default function Layout({
                       {userRole ? (
                         <>
                           <p className="text-sm text-muted-foreground">
-                            You don&apos;t have permission to access this page. Only IT and FOH
-                            staff can access this area.
-                          </p>
-                          <p className="text-xs text-muted-foreground">
-                            Your current role: <span className="font-semibold">{userRole}</span>
+                            You don&apos;t have permission to access this page. Only IT and FOH can
+                            access this area.
                           </p>
                         </>
                       ) : (
